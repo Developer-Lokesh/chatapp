@@ -13,6 +13,7 @@ const ChatScreen = () => {
       {/* Messages Area */}
       <div className="flex-1 overflow-y-scroll hide-scrollbar p-4 pb-20">
         <Messages />
+        <Messages />
        
       </div>
 
