@@ -1,35 +1,70 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  const navigate = useNavigate();
   // State variables for form fields and loading
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [form, setForm] = useState({
+    fullName:"",
+    email:"",
+    password:"",
+    confirmPassword:""
+  })
   const [isLoading, setIsLoading] = useState(false);
 
+  // handle all inputs
+  const inputHandler = (e) => {
+    const eleName = e.target.name;
+    const value = e.target.value;
+    setForm({...form, [eleName]:value})
+  }
+
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
     // Basic Password Matching Validation
-    if (password !== confirmPassword) {
+    if (form.password !== form.confirmPassword) {
       alert("Passwords do not match!");
       setIsLoading(false);
-      return; // Stop form submission
+      return; 
     }
 
-    // Simulating an API call (like to your backend)
-    setTimeout(() => {
-      console.log("Signup Attempt:", { fullName, email, password });
-      setIsLoading(false);
-      alert("Account Created Successfully! (Demo)");
+    const {confirmPassword, ...signupBody} = form
+    try {
+      const url = import.meta.env.VITE_SERVER_URL;
+      const res = await fetch(`${url}/auth/signup`, {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify(signupBody)
+      });
+      const data = await res.json();
+      if(!data.success){
+        alert(data.message || "Something went wrong while creating account!");
+        setForm({
+          fullName:"",
+          email:"",
+          password:"",
+          confirmPassword:""
+        });
+        setIsLoading(false);
+        return;
+      } 
+
+      navigate("/")
       
-      // Optional: Clear form after success
-      // setFullName(''); setEmail(''); setPassword(''); setConfirmPassword('');
-    }, 2000); // 2-second delay
+
+    } catch (error) {
+      console.log(error)
+     
+    } finally {
+      setIsLoading(false)
+    }
+
+   
   };
 
   return (
@@ -50,11 +85,12 @@ const Signup = () => {
             <label className="block text-sm font-medium text-gray-700">Full Name</label>
             <input
               type="text"
+              name = "fullName"
+              value={form.fullName}
               required
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="John Doe"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              onChange={inputHandler}
             />
           </div>
 
@@ -63,11 +99,12 @@ const Signup = () => {
             <label className="block text-sm font-medium text-gray-700">Email Address</label>
             <input
               type="email"
+              name = "email"
+              value={form.email}
               required
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="name@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={inputHandler}
             />
           </div>
 
@@ -76,12 +113,13 @@ const Signup = () => {
             <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
+              name = "password"
+              value={form.password}
               required
               minLength={6} // Basic length validation
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={inputHandler}
             />
           </div>
 
@@ -90,17 +128,18 @@ const Signup = () => {
             <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
             <input
               type="password"
+              name = "confirmPassword"
+              value={form.confirmPassword}
               required
               className={`mt-1 block w-full px-4 py-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all ${
                 // Visual feedback if passwords don't match (when confirmPassword has value)
-                confirmPassword && password !== confirmPassword ? 'border-red-500' : 'border-gray-300'
+                form.confirmPassword && form.password !== form.confirmPassword ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={inputHandler}
             />
             {/* Visual error message */}
-            {confirmPassword && password !== confirmPassword && (
+            {form.confirmPassword && form.password !== form.confirmPassword && (
                 <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
             )}
           </div>

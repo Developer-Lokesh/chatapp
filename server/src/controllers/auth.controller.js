@@ -16,7 +16,7 @@ export const signup = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      error: "Something went wrong",
+      message: error.message || "Something went wrong",
     });
   }
 };
@@ -52,7 +52,7 @@ export const login = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      error: "Internal server error",
+      message: error.message || "Internal server error",
     });
   }
 };
@@ -69,7 +69,7 @@ export const logout = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      error: "Internal server error",
+      message: error.message || "Internal server error",
     });
   }
 };

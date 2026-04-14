@@ -1,21 +1,53 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    email:"",
+    password:""
+  })
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const inputHandler = (e) => {
+    const eleName = e.target.name;
+    const value = e.target.value;
+    setForm({...form, [eleName]: value});
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    // Simulating an API call
-    setTimeout(() => {
-      console.log("Login Attempt:", { email, password });
-      setIsLoading(false);
-      alert("Login Successful! (Demo)");
-    }, 2000);
+    try {
+      setIsLoading(true);
+      const url = import.meta.env.VITE_SERVER_URL;
+      const res = await fetch(`${url}/auth/login`,{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+        },
+        body: JSON.stringify(form),
+        credentials:"include"
+      });
+
+      const data = await res.json();
+      console.log(data)
+      if(!data.success){
+        alert(data.message || "Something went wrong while logged in");
+        setForm({
+          email:"",
+          password:"",
+        });
+        return;
+      }
+      
+      navigate("/")
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
+    
   };
 
   return (
@@ -37,8 +69,9 @@ const Login = () => {
               required
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="name@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name = "email"
+              value={form.email}
+              onChange={inputHandler}
             />
           </div>
 
@@ -49,8 +82,9 @@ const Login = () => {
               required
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={form.password}
+              onChange={inputHandler}
             />
           </div>
 
