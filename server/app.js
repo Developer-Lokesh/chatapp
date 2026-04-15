@@ -5,6 +5,7 @@ import { initDB } from "./src/database/init.js";
 
 import auth from "./src/routes/auth.route.js"
 import logout from "./src/routes/logout.route.js"
+import chatRequest from "./src/routes/chat_request.route.js"
 
 import {verifyUser} from "./src/middleware/auth.middleware.js"
 
@@ -32,7 +33,8 @@ app.use('/auth', auth)
 
 app.use(verifyUser);
 
-app.use("/logout", logout)
+app.use("/logout", logout);
+app.use("/chat-request", chatRequest)
 
 
 
