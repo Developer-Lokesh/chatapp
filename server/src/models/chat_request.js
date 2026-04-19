@@ -21,13 +21,15 @@ export const insertRequest = async (senderId, receiverId) => {
 };
 
 export const getRequest = async (userId) => {
+    console.log(userId)
     const [rows] = await db.query(
-        `SELECT cr.id u.id  as senderId , u.fullName
+        `SELECT cr.id, u.id  as senderId , u.fullName
         FROM chat_request cr
         JOIN users u ON  cr.senderId = u.id
         WHERE cr.receiverId = ? AND  cr.status = 'pending'`,
         [userId]
     );
+    console.log(rows);
     return rows;
 };
 

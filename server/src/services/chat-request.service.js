@@ -31,12 +31,13 @@ export const getChatRequestDB = async (userId) => {
 }
 
 export const updateChatRequestDB = async (requested, status) => {
+    console.log(requested, status)
      if(!requested || !status){
         throw new Error("request and status not received")
     }
 
     if(!["accepted", "rejected"].includes(status)){
-        throw new Errow("Invalid status");
+        throw new Error("Invalid status");
     }
 
     await updateRequest(requested, status);

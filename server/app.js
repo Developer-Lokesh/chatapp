@@ -6,6 +6,7 @@ import { initDB } from "./src/database/init.js";
 import auth from "./src/routes/auth.route.js"
 import logout from "./src/routes/logout.route.js"
 import chatRequest from "./src/routes/chat_request.route.js"
+import search from "./src/routes/search.route.js"
 
 import {verifyUser} from "./src/middleware/auth.middleware.js"
 
@@ -35,6 +36,7 @@ app.use(verifyUser);
 
 app.use("/logout", logout);
 app.use("/chat-request", chatRequest)
+app.use("/search", search)
 
 
 

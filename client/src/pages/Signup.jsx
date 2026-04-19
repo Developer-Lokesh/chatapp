@@ -44,12 +44,12 @@ const Signup = () => {
       const data = await res.json();
       if(!data.success){
         alert(data.message || "Something went wrong while creating account!");
-        setForm({
-          fullName:"",
-          email:"",
-          password:"",
-          confirmPassword:""
-        });
+        // setForm({
+        //   fullName:"",
+        //   email:"",
+        //   password:"",
+        //   confirmPassword:""
+        // });
         setIsLoading(false);
         return;
       } 

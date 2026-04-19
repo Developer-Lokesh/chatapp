@@ -5,51 +5,68 @@ import {
   Settings, 
   Search, 
   LogOut, 
-  ChevronLeft, 
-  ChevronRight,
   Bell,
-  BarChart3
+  BarChart3,
+  MessageCircle
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const Sidebar = () => {
+const Sidebar = ({openSidebar, setOpenSidebar}) => {
+  console.log(openSidebar ," in sidebar")
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState('Dashboard');
 
   const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard size={22} /> },
-    { name: 'Search', icon: <Search size={22} /> },
-    { name: 'Analytics', icon: <BarChart3 size={22} /> },
-    { name: 'Profile', icon: <User size={22} /> },
-    { name: 'Notifications', icon: <Bell size={22} /> },
-    { name: 'Settings', icon: <Settings size={22} /> },
+    { name: 'Chat Request', icon: <MessageCircle size={22} />, path:"/chat-request" },
+    { name: 'Add friend', icon: <Search size={22} />, path:"/add-friend" },
+    { name: 'Analytics', icon: <BarChart3 size={22} />, path:"/analytics" },
+    { name: 'Profile', icon: <User size={22} />, path:"/profile" },
+    { name: 'Notifications', icon: <Bell size={22} />, path:"/notifications" },
+    { name: 'Settings', icon: <Settings size={22} />, path:"/setting" },
   ];
 
+   const logoutHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const url = import.meta.env.VITE_SERVER_URL;
+      const res = await fetch(`${url}/logout/`, {
+        method: "POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        credentials: "include",
+      });
+      const data = await res.json();
+      console.log(data);
+      if(data.success){
+        localStorage.removeItem("user")
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className={`fixed top-0 left-0 h-full w-[300px] z-40 bg-white shadow-lg transform transition-transform duration-300 ${
+    openSidebar ? "translate-x-0" : "-translate-x-full"
+  }`}>
       {/* Sidebar Container */}
       <div 
-        className={`relative bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col ${
-          isCollapsed ? 'w-20' : 'w-64'
-        }`}
+        className={`relative h-screen bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col`}
       >
-        {/* Toggle Button */}
-        <button 
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute -right-3 top-10 bg-purple-600 text-white rounded-full p-1 shadow-lg hover:bg-purple-700 transition-colors"
-        >
-          {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-        </button>
+        <button onClick={() => setOpenSidebar((prev) => !prev)} className='absolute font-bold top-2 right-4 transition duration-300 hover:text-red-500'>X</button> 
 
         {/* Logo Section */}
         <div className="p-6 flex items-center gap-4">
           <div className="bg-gradient-to-br from-indigo-500 to-pink-500 p-2 rounded-lg shrink-0">
             <div className="w-6 h-6 border-2 border-white rounded-md"></div>
           </div>
-          {!isCollapsed && (
+          {/* {!isCollapsed && ( */}
             <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent">
-              BrandName
+              GhostChat
             </span>
-          )}
+          {/* // )} */}
         </div>
 
         {/* Menu Items */}
@@ -68,22 +85,22 @@ const Sidebar = () => {
                 {item.icon}
               </div>
               {!isCollapsed && (
-                <span className="font-medium whitespace-nowrap">{item.name}</span>
+                <Link to={item.path} className="font-medium whitespace-nowrap">{item.name}</Link>
               )}
               
               {/* Tooltip for Collapsed State */}
-              {isCollapsed && (
+              {/* {isCollapsed && (
                 <div className="absolute left-full ml-6 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
                   {item.name}
                 </div>
-              )}
+              )} */}
             </button>
           ))}
         </nav>
 
         {/* Footer / User Profile */}
         <div className="p-4 border-t border-gray-100">
-          <button className={`w-full flex items-center gap-4 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-all group`}>
+          <button onClick={logoutHandler} className={`w-full flex items-center gap-4 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-all group`}>
             <LogOut size={22} />
             {!isCollapsed && <span className="font-medium">Logout</span>}
           </button>
@@ -105,12 +122,12 @@ const Sidebar = () => {
       </div>
 
       {/* Main Content Area Preview */}
-      <div className="flex-1 p-10 overflow-auto">
+      {/* <div className="flex-1 p-10 overflow-auto">
         <h1 className="text-2xl font-bold text-gray-800">
           Welcome to {activeItem}
         </h1>
         <p className="text-gray-500 mt-2">Content goes here...</p>
-      </div>
+      </div> */}
     </div>
   );
 };

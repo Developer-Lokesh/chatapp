@@ -3,6 +3,9 @@ import Leftside from "./components/Leftside";
 import Rightside from "./components/Rightside";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ChatRequest from "./components/ChatRequest";
+import ProfileSection from "./components/ProfileSection";
+import AddFriend from "./components/AddFriend";
 
 const App = () => {
   return (
@@ -18,6 +21,9 @@ const App = () => {
               </div>
             }
           />
+          <Route path="/chat-request" element={<ChatRequest/>}/>
+          <Route path="/profile" element={<ProfileSection/>}/>
+          <Route path="/add-friend" element={<AddFriend/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/signup" element={<Signup/>}/>
         </Routes>
