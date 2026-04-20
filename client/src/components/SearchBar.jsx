@@ -105,22 +105,7 @@ const SearchBar = () => {
                   />
                   <span>{data.fullName}</span>
                 </span>
-                {/* <button className="flex font-bold text-blue-600">
-                  <Plus />
-                </button> */}
-                {/* <div className="relative group bg-green-500 hover:bg-green-400">
-                  <button className="flex font-bold text-white p-1">
-                    <Plus />
-                  </button>
-
-                  <span
-                    className="absolute bottom-full mb-2 left-1/2 -translate-x-1/1 
-                    whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded 
-                    opacity-0 group-hover:opacity-100 transition-all duration-200"
-                  >
-                    Send Chat Request
-                  </span>
-                </div> */}
+                
               </div>
             ))}
           </div>

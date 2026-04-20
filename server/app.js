@@ -7,6 +7,7 @@ import auth from "./src/routes/auth.route.js"
 import logout from "./src/routes/logout.route.js"
 import chatRequest from "./src/routes/chat_request.route.js"
 import search from "./src/routes/search.route.js"
+import userPermisions  from "./src/routes/index.js"
 
 import {verifyUser} from "./src/middleware/auth.middleware.js"
 
@@ -33,6 +34,8 @@ app.get("/", (req, res) => {
 app.use('/auth', auth)
 
 app.use(verifyUser);
+
+app.use("/user", userPermisions)
 
 app.use("/logout", logout);
 app.use("/chat-request", chatRequest)

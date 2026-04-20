@@ -10,6 +10,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Me from './Me';
 
 const Sidebar = ({openSidebar, setOpenSidebar}) => {
   console.log(openSidebar ," in sidebar")
@@ -110,8 +111,9 @@ const Sidebar = ({openSidebar, setOpenSidebar}) => {
             />
             {!isCollapsed && (
               <div className="overflow-hidden">
-                <p className="text-sm font-bold text-gray-800 truncate">John Doe</p>
-                <p className="text-xs text-gray-500 truncate">john@example.com</p>
+                {/* <p className="text-sm font-bold text-gray-800 truncate">John Doe</p>
+                <p className="text-xs text-gray-500 truncate">john@example.com</p> */}
+                <Me/>
               </div>
             )}
           </div>
