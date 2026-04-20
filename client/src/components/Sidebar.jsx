@@ -19,10 +19,7 @@ const Sidebar = ({openSidebar, setOpenSidebar}) => {
   const menuItems = [
     { name: 'Chat Request', icon: <MessageCircle size={22} />, path:"/chat-request" },
     { name: 'Add friend', icon: <Search size={22} />, path:"/add-friend" },
-    { name: 'Analytics', icon: <BarChart3 size={22} />, path:"/analytics" },
     { name: 'Profile', icon: <User size={22} />, path:"/profile" },
-    { name: 'Notifications', icon: <Bell size={22} />, path:"/notifications" },
-    { name: 'Settings', icon: <Settings size={22} />, path:"/setting" },
   ];
 
    const logoutHandler = async (e) => {

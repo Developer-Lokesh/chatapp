@@ -1,18 +1,31 @@
 import React from "react";
-import { Mail, Edit2 } from "lucide-react";
+import { Mail, Edit2, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ProfileSection = ({ userData }) => {
   return (
-    <div className="max-w-2xl mx-auto mt-10">
+    <div className="w-full min-h-screen relative flex justify-center items-center bg-[#0a0a0c] p-4">
+      <div className="flex py-3 absolute top-2 left-3 items-center ">
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-gray-300 hover:text-white transition"
+        >
+          <ArrowLeft size={20} />
+          <span>Back</span>
+        </Link>
+      </div>
       {/* Profile Card */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
-        {/* Banner / Cover Header */}
+      <div className="w-full max-w-3xl bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+        
+        {/* Banner */}
         <div className="h-32 bg-gradient-to-r from-blue-600 to-purple-600 opacity-80"></div>
 
-        {/* User Info Container */}
+        {/* Content */}
         <div className="px-8 pb-8">
+          
           <div className="relative flex justify-between items-end -mt-16 mb-6">
-            {/* Profile Image with Neon Ring */}
+            
+            {/* Profile Image */}
             <div className="relative p-1 bg-gray-900 rounded-full ring-4 ring-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
               <img
                 src={userData?.avatar || "https://via.placeholder.com/150"}
@@ -30,31 +43,25 @@ const ProfileSection = ({ userData }) => {
 
           {/* Text Content */}
           <div className="space-y-4">
+            
             <div>
               <h2 className="text-3xl font-bold text-white tracking-tight">
-                {userData?.name || "Lokesh"}
+                {userData?.fullName || "Lokesh Kashyap"}
               </h2>
-              <p className="text-blue-400 font-medium tracking-wide uppercase text-xs mt-1">
-                Full Stack Developer
-              </p>
+
+              
             </div>
 
-            <p className="text-gray-300 leading-relaxed max-w-lg">
-              {userData?.bio ||
-                "Gymnast by passion, Developer by profession. Building cool things with MERN Stack & Tailwind CSS."}
-            </p>
+            
 
-            {/* Stats/Details */}
-            <div className="flex flex-wrap gap-6 py-4 border-y border-white/5">
-              {/* <div className="flex items-center gap-2 text-gray-400">
-                <MapPin size={18} className="text-red-400" />
-                <span className="text-sm">Moradabad, UP</span>
-              </div> */}
-              <div className="flex items-center gap-2 text-gray-400">
-                <Mail size={18} className="text-blue-400" />
-                <span className="text-sm">lokesh@example.com</span>
-              </div>
+            {/* Email */}
+            <div className="flex items-center gap-2 text-gray-400 py-4 border-t border-white/5">
+              <Mail size={18} className="text-blue-400" />
+              <span className="text-sm">
+                {userData?.email || "lokesh@example.com"}
+              </span>
             </div>
+
           </div>
         </div>
       </div>
