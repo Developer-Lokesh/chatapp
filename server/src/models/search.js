@@ -1,7 +1,7 @@
 import db from "../config/db.js";
 
 export const search = async (data, userId) => {
-  console.log(userId);
+  // console.log(userId, data);
   try {
     const [rows] = await db.query(
       `

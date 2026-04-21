@@ -1,30 +1,31 @@
 import React, { createContext, useEffect, useState } from 'react'
 
-export const AuthContext = createContext()
-const AuthProvider = ({children}) => {
-    const [userInfo, setUserInfo] = useState(null)
+export const FriendContext = createContext();
+const FriendProvider = ({children}) => {
+    const [friendInfo, setFrientInfo] = useState(null);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const url = import.meta.env.VITE_SERVER_URL;
-                const res = await fetch(`${url}/user/me/`, {
+                const res = await fetch(`${url}/user/friends/`, {
                     method:"GET",
                     credentials:"include"
-                });
+                })
                 const data = await res.json();
-                // console.log(data)
+                console.log(data)
                 if(data.success){
-                    setUserInfo(data.data)
+                    setFrientInfo(data.data)
                 }
             } catch (error) {
                 console.log(error)
             }
-        };
+        }
         fetchData();
-    }, []);
+    }, [])
   return (
-    <AuthContext.Provider value={{userInfo, setUserInfo}}>{children}</AuthContext.Provider>
+    <FriendContext.Provider value={{friendInfo, setFrientInfo}}>{children}</FriendContext.Provider>
   )
 }
 
-export default AuthProvider;
+export default FriendProvider

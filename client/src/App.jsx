@@ -6,29 +6,32 @@ import Signup from "./pages/Signup";
 import ChatRequest from "./components/ChatRequest";
 import ProfileSection from "./components/ProfileSection";
 import AddFriend from "./components/AddFriend";
-import  AuthProvider  from "./context/AuthProvider";
+import AuthProvider from "./context/AuthProvider";
+import FriendProvider from "./context/FriendProvider";
 
 const App = () => {
   return (
     <>
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <div className="flex h-screen">
-                  <Leftside />
-                  <Rightside />
-                </div>
-              }
-            />
-            <Route path="/chat-request" element={<ChatRequest />} />
-            <Route path="/profile" element={<ProfileSection />} />
-            <Route path="/add-friend" element={<AddFriend />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Routes>
+          <FriendProvider>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <div className="flex h-screen">
+                    <Leftside />
+                    <Rightside />
+                  </div>
+                }
+              />
+              <Route path="/chat-request" element={<ChatRequest />} />
+              <Route path="/profile" element={<ProfileSection />} />
+              <Route path="/add-friend" element={<AddFriend />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Routes>
+          </FriendProvider>
         </AuthProvider>
       </BrowserRouter>
     </>

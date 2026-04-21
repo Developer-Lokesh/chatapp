@@ -1,6 +1,7 @@
 import { search, searchFriend } from "../models/search.js";
 
 export const searchDB = async (query, userId) => {
+    // console.log(query, userId, "this is id in friendlist")
     try {
         if(!query){
             throw new Error("Search query required");

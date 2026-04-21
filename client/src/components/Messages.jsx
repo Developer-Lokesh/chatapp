@@ -1,26 +1,3 @@
-// const Messages = () => {
-//   return (
-//     <div className="p-4 space-y-3 bg-[#020617]    text-white">
-//       {/* Received Message */}
-//       <div className="flex">
-//         <div className="bg-[#1e293b] px-4 py-2 rounded-2xl rounded-tl-none max-w-xs">
-//           Hello bhai 👻
-//         </div>
-//       </div>
-
-//       {/* Sent Message */}
-//       <div className="flex justify-end">
-//         <div className="bg-green-500 px-4 py-2 rounded-2xl rounded-tr-none max-w-xs text-black">
-//           Kya haal hai
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Messages;
-
-
 import React, { useEffect, useRef } from "react";
 
 const Messages = () => {

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Mail, Edit2, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider";
 
 const ProfileSection = ({ userData }) => {
+  const {userInfo} = useContext(AuthContext)
   return (
     <div className="w-full min-h-screen relative flex justify-center items-center bg-[#0a0a0c] p-4">
       <div className="flex py-3 absolute top-2 left-3 items-center ">
@@ -28,8 +30,8 @@ const ProfileSection = ({ userData }) => {
             {/* Profile Image */}
             <div className="relative p-1 bg-gray-900 rounded-full ring-4 ring-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
               <img
-                src={userData?.avatar || "https://via.placeholder.com/150"}
-                alt="Profile"
+                src={userInfo?.[0]?.profileImageUrl || "https://via.placeholder.com/150"}
+                alt={userInfo?.[0]?.fullName}
                 className="w-32 h-32 rounded-full object-cover border-4 border-gray-900"
               />
             </div>
@@ -46,7 +48,7 @@ const ProfileSection = ({ userData }) => {
             
             <div>
               <h2 className="text-3xl font-bold text-white tracking-tight">
-                {userData?.fullName || "Lokesh Kashyap"}
+                {userInfo?.[0]?.fullName || "Lokesh Kashyap"}
               </h2>
 
               
@@ -58,7 +60,7 @@ const ProfileSection = ({ userData }) => {
             <div className="flex items-center gap-2 text-gray-400 py-4 border-t border-white/5">
               <Mail size={18} className="text-blue-400" />
               <span className="text-sm">
-                {userData?.email || "lokesh@example.com"}
+                {userInfo?.[0]?.email || "lokesh@example.com"}
               </span>
             </div>
 

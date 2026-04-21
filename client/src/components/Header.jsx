@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const Header = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
-  console.log(openSidebar);
+  // console.log(openSidebar);
 
   const handleSidebar = () => {
     setOpenSidebar((prev) => !prev);
@@ -13,8 +13,11 @@ const Header = () => {
     <div className="flex items-center justify-between p-2 h-15 bg-slate-900 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
       {/* Left Section: Logo & Toggle */}
       <div className="flex items-center gap-4">
-        <button onClick={() => setOpenSidebar((prev) => !prev)} className="p-2 rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-600 transition-all active:scale-90 cursor-pointer">
-          <AlignJustify size={24}  />
+        <button
+          onClick={() => setOpenSidebar((prev) => !prev)}
+          className="p-2 rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-600 transition-all active:scale-90 cursor-pointer"
+        >
+          <AlignJustify size={24} />
           {/* <Sidebar/> */}
         </button>
 
@@ -23,30 +26,14 @@ const Header = () => {
         </h1>
       </div>
 
-      
+      {openSidebar && (
+        <div
+          className="fixed h-screen inset-0  w-screen bg-black/70 backdrop-blue-sm"
+          onClick={handleSidebar}
+        ></div>
+      )}
 
-{openSidebar && (
-  <div
-    className="fixed h-screen inset-0  w-screen bg-black/70 backdrop-blue-sm"
-    onClick={handleSidebar}
-  ></div>
-)}
-
-<Sidebar
-  openSidebar={openSidebar}
-  setOpenSidebar={setOpenSidebar}
-/>
-
-      {/* Right Section (Optional): Profile or Status */}
-      {/* <div className="flex items-center gap-3">
-        <div className="hidden sm:block text-right">
-          <p className="text-xs font-bold text-gray-800">Online</p>
-          <p className="text-[10px] text-green-500 flex items-center justify-end gap-1">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-            System Ready
-          </p>
-        </div>
-      </div> */}
+      <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
     </div>
   );
 };

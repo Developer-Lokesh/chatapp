@@ -6,6 +6,7 @@ const ChatRequest = () => {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState(null); 
+  // console.log(requests)
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -38,6 +39,7 @@ const ChatRequest = () => {
         body: JSON.stringify({ status: action }),
       });
       const data = await res.json();
+      console.log(data)
 
       if (data.success) {
         // UI se request smooth fade-out kar sakte ho ya turant filter
@@ -79,6 +81,7 @@ const ChatRequest = () => {
   }
 
   return (
+    
     <div className="bg-[#0a0a0c] min-h-screen p-4 sm:p-8">
       <div className="flex py-3 items-center ">
         <Link
@@ -101,7 +104,7 @@ const ChatRequest = () => {
             <div className="flex items-center gap-4 flex-1 w-full">
               <div className="relative shrink-0">
                 <img
-                  src={req.sender?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + req.id}
+                  src={req?.profileImageUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + req.id}
                   className="w-14 h-14 rounded-full object-cover border-2 border-blue-500/50"
                   alt="user"
                 />

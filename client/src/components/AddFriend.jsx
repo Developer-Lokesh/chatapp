@@ -23,7 +23,7 @@ const AddFriend = () => {
         credentials: "include",
       });
       const data = await res.json();
-      console.log(data.data);
+      console.log(data.data ," this is user data");
       if (data.success) {
         setResult(data.data);
         // setQuery("")
@@ -113,28 +113,28 @@ const AddFriend = () => {
               >
                 <div className="bg-slate-900 rounded-2xl p-5 flex items-center gap-4">
                   <img
-                    src="https://static.vecteezy.com/system/resources/thumbnails/021/353/308/small_2x/user-icon-for-website-and-mobile-apps-png.png"
-                    alt={user.fullName}
+                    src={user?.profileImageUrl}
+                    alt={user?.fullName}
                     className="w-14 h-14 rounded-full border-2 border-slate-700 group-hover:border-cyan-400 transition-colors"
                   />
 
                   <div className="flex-1">
                     <h4 className="font-semibold text-lg leading-tight">
-                      {user.fullName}
+                      {user?.fullName}
                     </h4>
                     {/* <p className="text-xs text-gray-500 mt-1">{user.mutuals} mutual friends</p> */}
                   </div>
 
                   <button
                     type="button"
-                    onClick={() => handleAddFriend(user.id)}
+                    onClick={() => handleAddFriend(user?.id)}
                     className={`p-2.5 rounded-xl transition-all duration-300 ${
-                      sentRequests?.includes(user.id)
+                      sentRequests?.includes(user?.id)
                         ? "bg-green-500/20 text-green-400"
                         : "bg-white/5 hover:bg-cyan-600 text-gray-300 hover:text-white"
                     }`}
                   >
-                    {sentRequests?.includes(user.id) ? (
+                    {sentRequests?.includes(user?.id) ? (
                       <Check size={20} />
                     ) : (
                       <UserPlus size={20} />
