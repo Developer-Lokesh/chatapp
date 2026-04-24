@@ -10,7 +10,7 @@ const Header = () => {
     setOpenSidebar((prev) => !prev);
   };
   return (
-    <div className="flex items-center justify-between p-2 h-15 bg-slate-900 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+    <div className="flex items-center justify-between p-2 h-15 bg-[#0a0a0c] backdrop-blur-md border-b-2 border-gray-700 sticky top-0 z-50">
       {/* Left Section: Logo & Toggle */}
       <div className="flex items-center gap-4">
         <button

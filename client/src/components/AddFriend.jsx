@@ -18,7 +18,7 @@ const AddFriend = () => {
     e.preventDefault();
     try {
       const url = import.meta.env.VITE_SERVER_URL;
-      const res = await fetch(`${url}/search?query=${query}`, {
+      const res = await fetch(`${url}/user/search?query=${query}`, {
         method: "GET",
         credentials: "include",
       });
@@ -37,7 +37,7 @@ const AddFriend = () => {
     console.log(receiverId);
     try {
       const url = import.meta.env.VITE_SERVER_URL;
-      const res = await fetch(`${url}/chat-request/`, {
+      const res = await fetch(`${url}/user/chat-request/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -6,12 +6,17 @@ import ChatHeader from "./ChatHeader";
 const ChatScreen = () => {
   return (
     <div className="h-screen flex flex-col bg-[#020617] text-white">
-        <div>
+        <div className="hidden sm:block">
             <ChatHeader/>
         </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-scroll hide-scrollbar p-4 pb-20">
+      <div className="flex-1 overflow-y-scroll hide-scrollbar p-4 pb-20 bg-[#0a0a0c]">
+        <Messages />
+        <Messages />
+        <Messages />
+        <Messages />
+        <Messages />
         <Messages />
         <Messages />
        

@@ -5,7 +5,7 @@ export const friends = async (req, res) => {
     console.log(id)
     try {
         const data = await friendsDB(id);
-        console.log(data, "this is data")
+        // console.log(data, "this is data")
         return res.status(200).json({
             success:true,
             message:"Friends info fetched successfully",

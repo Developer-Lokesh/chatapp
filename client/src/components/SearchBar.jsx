@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Plus, Search, X } from "lucide-react";
+import { FriendContext } from "../context/FriendProvider";
 
 const SearchBar = () => {
+  const {setSelectedFriend} = useContext(FriendContext)
   const [query, setQuery] = useState("");
   const [result, setResult] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
@@ -11,7 +13,7 @@ const SearchBar = () => {
     e.preventDefault();
     try {
       const url = import.meta.env.VITE_SERVER_URL;
-      const res = await fetch(`${url}/search/friends?query=${query}`, {
+      const res = await fetch(`${url}/user/search/friends?query=${query}`, {
         method: "GET",
         credentials: "include",
       });
@@ -36,7 +38,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-slate-800 justify-center p-6">
+    <div className="flex flex-col items-center bg-[#0a0a0c] justify-center p-6">
       {/* Search Container */}
       <form
         onSubmit={submitHandler}
@@ -95,11 +97,12 @@ const SearchBar = () => {
             {result?.map((data) => (
               <div
                 key={data.id}
-                className="flex space-x-4 p-2 justify-between items-center hover:bg-gray-200"
+                onClick={setSelectedFriend(data)}
+                className="flex cursor-pointer  space-x-4 p-2 justify-between items-center hover:bg-gray-200"
               >
-                <span className="flex  items-center space-x-4">
+                <span className="flex items-center space-x-4">
                   <img
-                    src="https://static.vecteezy.com/system/resources/thumbnails/021/353/308/small_2x/user-icon-for-website-and-mobile-apps-png.png"
+                    src={data?.profileImageUrl}
                     alt=""
                     className="w-8 h-8 rounded-full"
                   />
@@ -112,7 +115,7 @@ const SearchBar = () => {
           <button onClick={closeHandler} className="absolute top-2 right-4">
             <X />
           </button>
-          <div className="p-4 hover:bg-purple-50 cursor-pointer transition-colors">
+          <div className="p-4 hover:bg-purple-50  transition-colors">
             {result?.length > 0 ? "Search Result" : "Result not found"}
           </div>
         </div>

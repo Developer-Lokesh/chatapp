@@ -20,23 +20,21 @@ const Messages = () => {
       {messages.map((msg, index) => (
         <div
           key={index}
-          className={`flex ${
-            msg.sender === "me" ? "justify-end" : ""
-          }`}
+          className={`flex ${msg.sender === "me" ? "justify-end" : ""}`}
         >
           <div
             className={`px-4 py-2 rounded-2xl max-w-xs ${
               msg.sender === "me"
-                ? "bg-green-500 text-black rounded-tr-none"
-                : "bg-[#1e293b] rounded-tl-none"
+                ? "bg-[#2563eb] text-white rounded-tr-none shadow-md"
+                : "bg-[#1f2937] text-gray-200 rounded-tl-none"
             }`}
           >
             {msg.text}
           </div>
+          
         </div>
       ))}
 
-      {/* 👇 important for scroll */}
       <div ref={bottomRef}></div>
     </div>
   );

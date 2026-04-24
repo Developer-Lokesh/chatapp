@@ -12,7 +12,7 @@ const ChatRequest = () => {
     const fetchRequests = async () => {
       try {
         const url = import.meta.env.VITE_SERVER_URL;
-        const res = await fetch(`${url}/chat-request/`, {
+        const res = await fetch(`${url}/user/chat-request/`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -32,7 +32,7 @@ const ChatRequest = () => {
     setProcessingId(requestId); 
     try {
       const url = import.meta.env.VITE_SERVER_URL;
-      const res = await fetch(`${url}/chat-request/${requestId}`, {
+      const res = await fetch(`${url}/user/chat-request/${requestId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

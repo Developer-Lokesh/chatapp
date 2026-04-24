@@ -8,6 +8,7 @@ import ProfileSection from "./components/ProfileSection";
 import AddFriend from "./components/AddFriend";
 import AuthProvider from "./context/AuthProvider";
 import FriendProvider from "./context/FriendProvider";
+import MainContainer from "./pages/MainContainer";
 
 const App = () => {
   return (
@@ -23,8 +24,10 @@ const App = () => {
                     <Leftside />
                     <Rightside />
                   </div>
+                  // <MainContainer/>
                 }
               />
+              {/* <Route path="/message" element={<Rightside />} /> */}
               <Route path="/chat-request" element={<ChatRequest />} />
               <Route path="/profile" element={<ProfileSection />} />
               <Route path="/add-friend" element={<AddFriend />} />

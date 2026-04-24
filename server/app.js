@@ -1,15 +1,19 @@
 import express from "express";
-import dotenv from "dotenv"
-import cors from "cors"
+import dotenv from "dotenv";
+import cors from "cors";
+import http from "http";
+
+import {Server} from "socket.io";
+
 import { initDB } from "./src/database/init.js";
 
-import auth from "./src/routes/auth.route.js"
-import logout from "./src/routes/logout.route.js"
-import chatRequest from "./src/routes/chat_request.route.js"
-import search from "./src/routes/search.route.js"
-import userPermisions  from "./src/routes/index.js"
+import auth from "./src/routes/auth.route.js";
+import logout from "./src/routes/logout.route.js";
+import chatRequest from "./src/routes/chat_request.route.js";
+import search from "./src/routes/search.route.js";
+import userPermisions  from "./src/routes/index.js";
 
-import {verifyUser} from "./src/middleware/auth.middleware.js"
+import {verifyUser} from "./src/middleware/auth.middleware.js";
 
 import cookieParser from "cookie-parser";
 
@@ -20,8 +24,17 @@ const PORT = process.env.PORT || 5001
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: "http://localhost:5173",
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors:{
+    origin:"http://localhost:5173",
+    credentials:true
+  }
+})
+
+app.use(cors({  origin: "http://localhost:5173",
   credentials: true
 }))
 app.use(express.json())
@@ -37,9 +50,25 @@ app.use(verifyUser);
 
 app.use("/user", userPermisions)
 
-app.use("/logout", logout);
-app.use("/chat-request", chatRequest)
-app.use("/search", search)
+
+io.on("connetion", (socket) => {
+  console.log('user connected', socket.id);
+
+  socket.on("send_message", (data) => {
+    console.log("Message", data);
+
+    io.emit("receive_message", data)
+  });
+
+  socket.on("disconnected", (socket) => {
+    console.log("User disconnected", socket.id)
+  })
+
+});
+
+
+
+
 
 
 
@@ -47,7 +76,7 @@ const startServer = async () => {
   try {
     await initDB();
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
 

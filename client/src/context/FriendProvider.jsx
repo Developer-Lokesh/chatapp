@@ -3,6 +3,8 @@ import React, { createContext, useEffect, useState } from 'react'
 export const FriendContext = createContext();
 const FriendProvider = ({children}) => {
     const [friendInfo, setFrientInfo] = useState(null);
+    const [selectedFriend, setSelectedFriend] = useState(null)
+    // console.log(selectedFriend)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -13,9 +15,9 @@ const FriendProvider = ({children}) => {
                     credentials:"include"
                 })
                 const data = await res.json();
-                console.log(data)
+                // console.log(data)
                 if(data.success){
-                    setFrientInfo(data.data)
+                    setFrientInfo(data?.data)
                 }
             } catch (error) {
                 console.log(error)
@@ -24,7 +26,7 @@ const FriendProvider = ({children}) => {
         fetchData();
     }, [])
   return (
-    <FriendContext.Provider value={{friendInfo, setFrientInfo}}>{children}</FriendContext.Provider>
+    <FriendContext.Provider value={{friendInfo, setFrientInfo, selectedFriend, setSelectedFriend}}>{children}</FriendContext.Provider>
   )
 }
 

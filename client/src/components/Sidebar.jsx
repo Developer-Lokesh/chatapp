@@ -36,7 +36,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
     e.preventDefault();
     try {
       const url = import.meta.env.VITE_SERVER_URL;
-      const res = await fetch(`${url}/logout/`, {
+      const res = await fetch(`${url}/user/logout/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,13 +55,13 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-[300px] z-40 bg-white shadow-lg transform transition-transform duration-300 ${
+      className={`fixed top-0 left-0 h-[100dvh] w-[300px] z-40 bg-white shadow-lg transform transition-transform duration-300 ${
         openSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
       {/* Sidebar Container */}
       <div
-        className={`relative h-screen bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col`}
+        className={`relative h-[100dvh] bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col`}
       >
         <button
           onClick={() => setOpenSidebar((prev) => !prev)}
@@ -105,12 +105,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
                 </Link>
               )}
 
-              {/* Tooltip for Collapsed State */}
-              {/* {isCollapsed && (
-                <div className="absolute left-full ml-6 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
-                  {item.name}
-                </div>
-              )} */}
+              
             </button>
           ))}
         </nav>
@@ -150,13 +145,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
         </div>
       </div>
 
-      {/* Main Content Area Preview */}
-      {/* <div className="flex-1 p-10 overflow-auto">
-        <h1 className="text-2xl font-bold text-gray-800">
-          Welcome to {activeItem}
-        </h1>
-        <p className="text-gray-500 mt-2">Content goes here...</p>
-      </div> */}
+     
     </div>
   );
 };
