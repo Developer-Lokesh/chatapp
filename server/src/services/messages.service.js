@@ -1,7 +1,7 @@
 import { fetchMessage, saveMessage } from "../models/messages.js"
 
 export const saveMessageDB = async (senderId, receiverId, message) => {
-    console.log(senderId, receiverId, message, "in service")
+    // console.log(senderId, receiverId, message, "in service")
     try {
         if(!senderId || !receiverId || !message){
             throw new Error("Fields are missing")

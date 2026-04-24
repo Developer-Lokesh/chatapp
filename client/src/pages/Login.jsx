@@ -42,9 +42,9 @@ const Login = () => {
       }
       console.log(data.name, data.email);
 
-      const user = data.data.fullName;
+      const id = data.data.id;
 
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("id", JSON.stringify(id));
 
       navigate("/");
     } catch (error) {

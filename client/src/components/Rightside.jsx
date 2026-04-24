@@ -10,14 +10,12 @@ const Rightside = () => {
   const { selectedFriend, setSelectedFriend  } = useContext(FriendContext);
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
 
-  // Mobile pe jab friend select ho to chat open karo
   useEffect(() => {
-    if (selectedFriend && window.innerWidth < 640) { // sm breakpoint
+    if (selectedFriend && window.innerWidth < 640) { 
       setIsMobileChatOpen(true);
     }
   }, [selectedFriend]);
 
-  // Mobile pe back button functionality
   const closeMobileChat = () => {
     setIsMobileChatOpen(false);
     setSelectedFriend(null)
@@ -25,7 +23,6 @@ const Rightside = () => {
 
   return (
     <>
-      {/* PC Version - Always visible */}
       <div className="hidden sm:flex sm:w-[70%] lg:w-[65%] bg-[#020617] overflow-hidden h-screen border-l border-gray-700">
         {selectedFriend ? (
           <div className="w-full h-full flex flex-col">
@@ -46,13 +43,10 @@ const Rightside = () => {
         )}
       </div>
 
-      {/* Mobile Fullscreen Chat */}
       {isMobileChatOpen && (
         <div className="sm:hidden fixed inset-0 z-50 bg-[#020617] flex flex-col">
-          {/* Mobile Chat Header with Close Button */}
           <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-[#0a0a0c]">
             <div className="flex items-center space-x-3">
-              {/* Friend Avatar/Profile Pic */}
               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                 <img className="text-white font-semibold text-sm rounded-full"
                 src={selectedFriend?.profileImageUrl}
@@ -67,7 +61,6 @@ const Rightside = () => {
               </div>
             </div>
             
-            {/* Close Button */}
             <button
               onClick={closeMobileChat}
               className="p-2 rounded-full hover:bg-white/10 transition-all"
@@ -76,17 +69,13 @@ const Rightside = () => {
             </button>
           </div>
 
-          {/* Chat Content */}
           <div className="flex-1 overflow-hidden">
             <ChatScreen />
           </div>
 
-          {/* Chat Footer */}
-          {/* <Chatfooter /> */}
         </div>
       )}
 
-      {/* Mobile Overlay */}
       {isMobileChatOpen && (
         <div 
           className= "sm:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm "

@@ -51,7 +51,7 @@ app.use(verifyUser);
 app.use("/user", userPermisions)
 
 
-io.on("connetion", (socket) => {
+io.on("connection", (socket) => {
   console.log('user connected', socket.id);
 
   socket.on("send_message", (data) => {
@@ -60,7 +60,7 @@ io.on("connetion", (socket) => {
     io.emit("receive_message", data)
   });
 
-  socket.on("disconnected", (socket) => {
+  socket.on("disconnect", (socket) => {
     console.log("User disconnected", socket.id)
   })
 

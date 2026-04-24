@@ -34,19 +34,16 @@ const SearchBar = () => {
   };
 
   const handleClear = () => {
-    // setQuery("");
   };
 
   return (
     <div className="flex flex-col items-center bg-[#0a0a0c] justify-center p-6">
-      {/* Search Container */}
       <form
         onSubmit={submitHandler}
         className={`relative w-full max-w-xl flex items-center transition-all duration-300 transform ${
           isFocused ? "scale-[1.02]" : "scale-100"
         }`}
       >
-        {/* Search Icon */}
         <div className="absolute left-4 text-gray-400">
           <Search
             size={20}
@@ -54,7 +51,6 @@ const SearchBar = () => {
           />
         </div>
 
-        {/* Input Field */}
         <input
           type="text"
           placeholder="Name or Email..."
@@ -69,7 +65,6 @@ const SearchBar = () => {
           }`}
         />
 
-        {/* Clear/Cross Icon */}
         {query && (
           <button
             onClick={handleClear}
@@ -80,14 +75,12 @@ const SearchBar = () => {
         )}
       </form>
 
-      {/* Decorative Gradient Line (Theme Matching) */}
       <div className="mt-4 flex gap-2">
         <span className="h-1 w-8 bg-indigo-500 rounded-full"></span>
         <span className="h-1 w-12 bg-purple-500 rounded-full"></span>
         <span className="h-1 w-8 bg-pink-500 rounded-full"></span>
       </div>
 
-      {/* Demo Search Result Preview (Optional) */}
       {query && (
         <div className={`mt-4 w-full overflow-y-auto hide-scrollbar max-w-xl relative bg-white rounded-xl shadow-xl 
         border border-gray-100 animate-in fade-in slide-in-from-top-2 ${result.length > 1 ? "h-52" : "h-fit"}`}>

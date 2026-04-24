@@ -6,27 +6,20 @@ import ChatHeader from "./ChatHeader";
 const ChatScreen = () => {
   return (
     <div className="h-screen flex flex-col bg-[#020617] text-white">
-        <div className="hidden sm:block">
-            <ChatHeader/>
-        </div>
+      <div className="hidden sm:block">
+        <ChatHeader />
+      </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-scroll hide-scrollbar p-4 pb-20 bg-[#0a0a0c]">
+      <div className="flex-1 overflow-y-scroll h-fit  bg-[#0a0a0c] hide-scrollbar  ">
         <Messages />
-        <Messages />
-        <Messages />
-        <Messages />
-        <Messages />
-        <Messages />
-        <Messages />
-       
+        {/* <Messages /> */}
       </div>
 
       {/* Footer (no sticky needed) */}
       <div className="bg-[#020617] border-t border-gray-700">
         <Chatfooter />
       </div>
-
     </div>
   );
 };

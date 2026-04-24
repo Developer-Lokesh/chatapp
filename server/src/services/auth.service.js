@@ -29,7 +29,7 @@ export const signupDB = async ( fullName, email, password ) => {
 };
 
 export const loginDB = async ( email, password ) => {
-  console.log(email,password , " in service")
+  // console.log(email,password , " in service")
   if (!email || !password) {
     throw new Error("All fields required")
   }

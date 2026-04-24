@@ -22,7 +22,7 @@ export const search = async (data, userId) => {
       );`,
       [`%${data}%`, `%${data}%`, userId, userId, userId, userId],
     );
-    console.log(rows);
+    // console.log(rows);
 
     return rows;
   } catch (error) {

@@ -31,7 +31,7 @@ export const getChatRequestDB = async (userId) => {
 }
 
 export const updateChatRequestDB = async (requested, status) => {
-    console.log(requested, status)
+    // console.log(requested, status)
      if(!requested || !status){
         throw new Error("request and status not received")
     }

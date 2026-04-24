@@ -21,7 +21,7 @@ export const insertRequest = async (senderId, receiverId) => {
 };
 
 export const getRequest = async (userId) => {
-    console.log(userId)
+    // console.log(userId)
     const [rows] = await db.query(
         `SELECT cr.id, u.id  as senderId , u.fullName, u.profileImageUrl
         FROM chat_request cr
@@ -29,7 +29,7 @@ export const getRequest = async (userId) => {
         WHERE cr.receiverId = ? AND  cr.status = 'pending'`,
         [userId]
     );
-    console.log(rows);
+    // console.log(rows);
     return rows;
 };
 

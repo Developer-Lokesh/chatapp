@@ -14,7 +14,7 @@ export const friends = async (userId) => {
             WHERE c.status = 'accepted'
             `, [userId, userId]
         );
-        console.log(friends, "in schema")
+        // console.log(friends, "in schema")
         return friends
 
     } catch (error) {

@@ -59,7 +59,6 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
         openSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      {/* Sidebar Container */}
       <div
         className={`relative h-[100dvh] bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col`}
       >
@@ -70,19 +69,15 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           X
         </button>
 
-        {/* Logo Section */}
         <div className="p-6 flex items-center gap-4">
           <div className="bg-gradient-to-br from-indigo-500 to-pink-500 p-2 rounded-lg shrink-0">
             <div className="w-6 h-6 border-2 border-white rounded-md"></div>
           </div>
-          {/* {!isCollapsed && ( */}
           <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent">
             GhostChat
           </span>
-          {/* // )} */}
         </div>
 
-        {/* Menu Items */}
         <nav className="flex-1 px-4 space-y-2 mt-4">
           {menuItems.map((item) => (
             <button
@@ -110,7 +105,6 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           ))}
         </nav>
 
-        {/* Footer / User Profile */}
         <div className="p-4 border-t border-gray-100">
           <button
             onClick={logoutHandler}
@@ -138,7 +132,6 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
                     {userInfo?.[0]?.email}
                   </p>
                 </div>
-                {/* <Me/> */}
               </div>
             )}
           </div>
