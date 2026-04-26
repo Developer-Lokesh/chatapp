@@ -10,6 +10,7 @@ import AuthProvider from "./context/AuthProvider";
 import FriendProvider from "./context/FriendProvider";
 import MessageProvider from "./context/MessageProvider";
 import SocketProvider from "./context/SocketProvider";
+// import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -20,22 +21,24 @@ const App = () => {
             <FriendProvider>
               <MessageProvider>
                 <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      <div className="flex h-screen">
-                        <Leftside />
-                        <Rightside />
-                      </div>
-                      // <MainContainer/>
-                    }
-                  />
-                  {/* <Route path="/message" element={<Rightside />} /> */}
-                  <Route path="/chat-request" element={<ChatRequest />} />
-                  <Route path="/profile" element={<ProfileSection />} />
-                  <Route path="/add-friend" element={<AddFriend />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
+                  {/* <Route element={<ProtectedRoute />}> */}
+                    <Route
+                      path="/"
+                      element={
+                        <div className="flex h-screen">
+                          <Leftside />
+                          <Rightside />
+                        </div>
+                        // <MainContainer/>
+                      }
+                    />
+                    {/* <Route path="/message" element={<Rightside />} /> */}
+                    <Route path="/chat-request" element={<ChatRequest />} />
+                    <Route path="/profile" element={<ProfileSection />} />
+                    <Route path="/add-friend" element={<AddFriend />} />
+                  {/* </Route> */}
                 </Routes>
               </MessageProvider>
             </FriendProvider>
