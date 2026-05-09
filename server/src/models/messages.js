@@ -13,7 +13,14 @@ export const fetchMessage = async (user1, user2) => {
         SELECT * FROM messages
         WHERE (senderId = ? AND receiverId = ?)
         OR (senderId = ? AND receiverId = ?)
-        ORDER BY create_At ASC`, [user1, user2, user2, user1]);
+        ORDER BY created_at ASC`, [user1, user2, user2, user1]);
         
         return messages;
+};
+
+export const updateMessageStatus = async (messageId, status) => {
+  await db.query(
+    `UPDATE messages SET status = ? WHERE id = ?`,
+    [status, messageId]
+  );
 };

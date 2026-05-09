@@ -10,10 +10,23 @@ const Messages = () => {
   const { selectedFriend } = useContext(FriendContext);
   const {socket} = useContext(SocketContext)
   const {messages} = useContext(MessageContext)
-  console.log(messages)
   const currentId = localStorage.getItem("id");
 
   const bottomRef = useRef(null);
+
+    const { typing } = useContext(SocketContext);
+  
+    const isTyping = typing[String(selectedFriend?.id)];
+
+  
+    const [localTyping, setLocalTyping] = useState(false);
+    console.log(localTyping)
+  
+    useEffect(() => {
+      if (selectedFriend?.id) {
+        setLocalTyping(isTyping);
+      }
+    }, [typing, selectedFriend]);
 
   // Auto scroll to bottom
 
@@ -47,6 +60,8 @@ const Messages = () => {
             </div>
           </div>
         ))}
+
+        <p className={`${localTyping ? "animate-bounce" : ""} text-gray-400`}>{localTyping ? "typing...": ""}</p>
 
         <div ref={bottomRef}></div>
         

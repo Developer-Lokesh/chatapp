@@ -4,7 +4,6 @@ export const FriendContext = createContext();
 const FriendProvider = ({children}) => {
     const [friendInfo, setFrientInfo] = useState(null);
     const [selectedFriend, setSelectedFriend] = useState(null)
-    // console.log(selectedFriend)
 
     useEffect(() => {
         const fetchData = async () => {

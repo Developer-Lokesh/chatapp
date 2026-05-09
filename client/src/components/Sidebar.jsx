@@ -15,10 +15,7 @@ import { AuthContext } from "../context/AuthProvider";
 
 const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   const { userInfo } = useContext(AuthContext);
-  // console.log(userInfo)
-  // console.log(userInfo?.[0]?.profileImageUrl)
 
-  // console.log(openSidebar, " in sidebar");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState("Dashboard");
 

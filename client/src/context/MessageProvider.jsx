@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { FriendContext } from "./FriendProvider";
-import { SocketContext } from "./SocketProvider"; 
+import { SocketContext } from "./SocketProvider";
 
 export const MessageContext = createContext();
 
 const MessageProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const { selectedFriend } = useContext(FriendContext);
-  const { socket } = useContext(SocketContext); 
-  const currentUserId = localStorage.getItem("id")
+  const { socket } = useContext(SocketContext);
+  const currentUserId = localStorage.getItem("id");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,6 +20,7 @@ const MessageProvider = ({ children }) => {
           credentials: "include",
         });
         const data = await res.json();
+        console.log(data, 'this is data')
         if (data.success) {
           setMessages(data.data);
         } else {
@@ -42,10 +43,10 @@ const MessageProvider = ({ children }) => {
       if (String(newMessage.senderId) === String(currentUserId)) {
         return;
       }
-      
 
-      const isRelevant = String(newMessage.senderId) === String(selectedFriend?.id) || 
-                         String(newMessage.receiverId) === String(selectedFriend?.id);
+      const isRelevant =
+        String(newMessage.senderId) === String(selectedFriend?.id) ||
+        String(newMessage.receiverId) === String(selectedFriend?.id);
 
       if (isRelevant) {
         setMessages((prev) => [...prev, newMessage]);

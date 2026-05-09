@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import http from "http";
 
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 
 import { initDB } from "./src/database/init.js";
 
@@ -11,66 +11,187 @@ import auth from "./src/routes/auth.route.js";
 import logout from "./src/routes/logout.route.js";
 import chatRequest from "./src/routes/chat_request.route.js";
 import search from "./src/routes/search.route.js";
-import userPermisions  from "./src/routes/index.js";
+import userPermisions from "./src/routes/index.js";
 
-import {verifyUser} from "./src/middleware/auth.middleware.js";
+import { verifyUser } from "./src/middleware/auth.middleware.js";
 
 import cookieParser from "cookie-parser";
+import { verifyToken } from "./src/utils/index.js";
+import { saveMessage, updateMessageStatus } from "./src/models/messages.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5001
+const PORT = process.env.PORT || 5001;
 
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors:{
-    origin:"http://localhost:5173",
-    credentials:true
-  }
-})
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+  },
+});
 
-app.use(cors({  origin: "http://localhost:5173",
-  credentials: true
-}))
-app.use(express.json())
-app.use(cookieParser())
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
-    res.send('hello world')
-})
+  res.send("hello world");
+});
 
-app.use('/auth', auth)
+app.use("/auth", auth);
 
 app.use(verifyUser);
 
-app.use("/user", userPermisions)
+app.use("/user", userPermisions);
 
-
-io.on("connection", (socket) => {
-  console.log('user connected', socket.id);
-
-  socket.on("send_message", (data) => {
-    console.log("Message", data);
-
-    io.emit("receive_message", data)
-  });
-
-  socket.on("disconnect", (socket) => {
-    console.log("User disconnected", socket.id)
-  })
-
+io.use((socket, next) => {
+  try {
+    // const token = socket.handshake.auth.accessToken;
+    const cookie = socket.handshake.headers.cookie;
+    const token = cookie
+      ?.split("; ")
+      .find((c) => c.startsWith("accessToken="))
+      ?.split("=")[1];
+    // console.log(token, "token");
+    if (!token) {
+      return next(new Error("Unauthorized"));
+    }
+    const decoded = verifyToken(token, process.env.JWT_ACCESS_SECRET);
+    socket.user = decoded;
+    next();
+  } catch (error) {
+    next(new Error("Invalid token"));
+  }
 });
 
+const onlineUsers = new Map();
 
+io.on("connection", (socket) => {
+  const userId = socket.user.id;
+  if (userId) {
+    onlineUsers.set(userId, socket.id);
+    console.log("user online")
 
+    // Sabko batao user online hai
+    io.emit("userOnline", userId);
 
+     io.emit("getOnlineUsers", Array.from(onlineUsers.keys()));
+  }
+  if (!userId) {
+    socket.disconnect();
+    return;
+  }
+  socket.join(userId);
+  // console.log("user connected", userId);
 
+  // send message
 
+  // socket.on("send_message", async (data) => {
+  //   try {
+  //     console.log("hit")
+  //     const { receiverId, message } = data;
+  //     const senderId = socket.user.id;
+
+  //     const messageId = await saveMessage(senderId, receiverId, message);
+
+  //     const newMessage = {
+  //       id: messageId,
+  //       senderId,
+  //       receiverId,
+  //       message,
+  //       status: "sent",
+  //     };
+
+  //     io.to(receiverId).emit("receive_message", newMessage);
+
+  //     // if (onlineUsers.has(receiverId)) {
+  //     //   io.to(receiverId).emit("receive_message", newMessage);
+  //     // }
+
+  //     // console.log("Message", data);
+
+  //     socket.emit("message_sent", newMessage); //{ messageId: data.id }
+  //   } catch (error) {
+  //     console.log("send error", error);
+  //   }
+  // });
+
+  socket.on("send_message", async (data) => {
+    try {
+      console.log("hit");
+
+      const newMessage = {
+        id: data.id,
+        senderId: data.senderId,
+        receiverId: data.receiverId,
+        message: data.message,
+        status: "sent",
+        create_At: data.create_At,
+      };
+
+      // receiver ko realtime message bhejo
+      io.to(data.receiverId).emit("receive_message", newMessage);
+
+      // sender ko confirmation bhejo
+      socket.emit("message_sent", newMessage);
+    } catch (error) {
+      console.log("send error", error);
+    }
+  });
+
+  // delivered message
+
+  // socket.on("message_delivered", ({ messageId, senderId }) => {
+  //   io.to(senderId).emit("message_delivered", { messageId });
+  // });
+
+  socket.on("message_delivered", async ({ messageId, senderId }) => {
+    try {
+      await updateMessageStatus(messageId, "delivered");
+
+      io.to(senderId).emit("message_delivered", { messageId });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  // seen message
+
+  socket.on("message_seen", ({ messageId, senderId }) => {
+    io.to(senderId).emit("message_seen", { messageId });
+  });
+
+  // typing indicator
+
+  socket.on("typing", ({ senderId, receiverId }) => {
+    // console.log("server receive typing", senderId, receiverId);
+    io.to(receiverId).emit("typing", { senderId });
+  });
+
+  // stop typing
+
+  socket.on("stopTyping", ({ senderId, receiverId }) => {
+    io.to(receiverId).emit("stopTyping", { senderId });
+  });
+
+  socket.on("disconnect", () => {
+    if (userId) {
+      onlineUsers.delete(userId);
+      console.log("user offline")
+
+      io.emit("userOffline", userId);
+     io.emit("getOnlineUsers", Array.from(onlineUsers.keys()));
+
+    }
+    console.log("User disconnected", userId);
+  });
+});
 
 const startServer = async () => {
   try {
@@ -79,12 +200,10 @@ const startServer = async () => {
     server.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
-
   } catch (error) {
     console.error("Server start failed:", error);
     process.exit(1);
   }
 };
 
-startServer()
-
+startServer();

@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { FriendContext } from "../context/FriendProvider";
 import { X } from "lucide-react";
+import { SocketContext } from "../context/SocketProvider";
 
 const ChatHeader = () => {
   const { selectedFriend } = useContext(FriendContext);
+  const { typing, onlineUsers } = useContext(SocketContext);
+  const isOnline = onlineUsers.includes(selectedFriend?.id);
+  console.log(isOnline);
+  console.log(onlineUsers, "online user");
+  const isTyping = typing[String(selectedFriend?.id)];
+
+  const [localTyping, setLocalTyping] = useState(false);
+  console.log(localTyping);
+
+  useEffect(() => {
+    if (selectedFriend?.id) {
+      setLocalTyping(isTyping);
+    }
+  }, [typing, selectedFriend]);
+
+
   return (
     <div className="flex relative items-center h-15 bg-[#0a0a0c] px-10 gap-5 border-b-2 border-gray-700">
       <div className="flex gap-4">
@@ -15,12 +32,16 @@ const ChatHeader = () => {
         />
         <span>
           <p>{selectedFriend?.fullName}</p>
-          <p className="text-gray-400">Online</p>
+          {localTyping ? (
+            <p className="text-gray-400">typing...</p>
+          ) : (
+            <p className="text-gray-400">{isOnline ? "Online" : "Offline"}</p>
+          )}
         </span>
       </div>
 
-      <button className="hidden sm:absolute right-2 top-0" >
-        <X/>
+      <button className="hidden sm:absolute right-2 top-0">
+        <X />
       </button>
     </div>
   );
