@@ -132,7 +132,7 @@ io.on("connection", (socket) => {
         receiverId: data.receiverId,
         message: data.message,
         status: "sent",
-        create_At: data.create_At,
+        created_at: data.create_at,
       };
 
       // receiver ko realtime message bhejo
@@ -163,8 +163,16 @@ io.on("connection", (socket) => {
 
   // seen message
 
-  socket.on("message_seen", ({ messageId, senderId }) => {
+  socket.on("message_seen", async ({ messageId, senderId }) => {
+    try {
+      await updateMessageStatus(messageId, "seen");
     io.to(senderId).emit("message_seen", { messageId });
+
+      // io.to(senderId).emit("message_delivered", { messageId });
+    } catch (err) {
+      console.log(err);
+    }
+    // io.to(senderId).emit("message_seen", { messageId });
   });
 
   // typing indicator

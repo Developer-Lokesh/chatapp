@@ -14,3 +14,18 @@ export const me = async (id) => {
         throw new Error(error || "Something went wrong")
     }
 }
+
+export const updateName = async (id, fullName) => {
+    console.log(id, fullName, "in model")
+
+    try {
+        const [rows] = await db.query(`
+            UPDATE users 
+            SET fullName = ?
+            WHERE id = ?`, [fullName, id])
+
+            return rows
+    } catch (error) {
+        throw new Error(error)
+    }
+};

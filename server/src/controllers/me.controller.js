@@ -1,4 +1,4 @@
-import { meDB } from "../services/me.service.js";
+import { meDB, updateNameDB } from "../services/me.service.js";
 
 export const me = async (req, res) => {
     try {
@@ -24,3 +24,29 @@ export const me = async (req, res) => {
         })
     }
 }
+
+export const updateName = async (req, res) => {
+    try {
+        const id = req.user.id;
+        const {fullName} = req.body
+        console.log(id, fullName, "this is info")
+        const data = await updateNameDB(id, fullName);
+        console.log(data, "this is data")
+         if(!data){
+            return res.status(401).json({
+                success:false,
+                message:"Something went wrong while change username",
+            })
+        }
+        return res.status(200).json({
+            success:true,
+            message:"username update successfully"
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success:false,
+            message:error.message || "Internal server error"
+        })
+    }
+};

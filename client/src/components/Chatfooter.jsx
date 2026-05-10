@@ -69,11 +69,13 @@ const Chatfooter = () => {
           senderId: currentId,
           receiverId,
           message: input,
-          create_At: new Date().toISOString(),
+          created_at: new Date().toISOString(),
         };
 
         // realtime emit
         socket.emit("send_message", newMessage);
+
+      
 
         // local UI update
         setMessages((prev) => [...prev, newMessage]);
