@@ -1,4 +1,4 @@
-import { me, updateName } from "../models/me.js";
+import { me, updateName, updateProfile } from "../models/me.js";
 
 export const meDB = async (id) => {
   try {
@@ -29,5 +29,20 @@ export const updateNameDB = async (id, fullName) => {
 
   } catch (error) {
     throw new Error(error || "something went wrong");
+  }
+};
+
+export const updateProfileDB = async (id, img, profileImagePublicId) => {
+  if(!id){
+    throw new Error("User not found")
+  }
+  if(!img){
+    throw new Error("Image not receive")
+  }
+  try {
+    const data = await updateProfile(id, img, profileImagePublicId);
+    return data;
+  } catch (error) {
+    throw new Error("Something went wrong")
   }
 };

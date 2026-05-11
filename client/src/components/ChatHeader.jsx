@@ -23,7 +23,7 @@ const ChatHeader = () => {
 
 
   return (
-    <div className="flex relative items-center h-15 bg-[#0a0a0c] px-10 gap-5 border-b-2 border-gray-700">
+    <div className="hidden sm:flex relative items-center h-15 bg-[#0a0a0c] px-10 gap-5 border-b-2 border-gray-700">
       <div className="flex gap-4">
         <img
           src={selectedFriend?.profileImageUrl}

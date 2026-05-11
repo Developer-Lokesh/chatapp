@@ -12,7 +12,7 @@ const AuthProvider = ({children}) => {
                     credentials:"include"
                 });
                 const data = await res.json();
-                // console.log(data)
+                console.log(data, "lokesh")
                 if(data.success){
                     setUserInfo(data.data)
                 }

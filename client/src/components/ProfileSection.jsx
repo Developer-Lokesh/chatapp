@@ -9,8 +9,9 @@ const ProfileSection = ({ userData }) => {
   const { userInfo } = useContext(AuthContext);
   const [handle, setHandle] = useState(false);
   const [input, setInput] = useState(userInfo?.[0]?.fullName || "");
-  console.log(handle);
-  console.log(handle);
+  const [open, setOpen] = useState(false);
+  // console.log(handle);
+  // console.log(handle);
 
   const handleForm = () => {
     setHandle(true);
@@ -89,11 +90,58 @@ const ProfileSection = ({ userData }) => {
               />
             </div>
 
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full flex items-center gap-2 transition-all font-medium mb-2 shadow-lg shadow-blue-500/20">
+            <button 
+            onClick={() => setOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full flex items-center gap-2 transition-all font-medium mb-2 shadow-lg shadow-blue-500/20">
               <Edit2 size={16} />
               Edit Profile
             </button>
           </div>
+
+
+{
+        open && (
+          <div 
+          className="fixed inset-0 text-white  bg-black/50 flex items-center justify-center">
+
+            <div className="bg-gray-950 p-6 border border-white rounded-xl w-[350px]">
+
+              <h1 className="text-xl font-bold mb-4">
+                Update Profile
+              </h1>
+
+              <input
+                type="file"
+                className="border p-2 w-full mb-4 rounded-md"
+              />
+
+              <div className="flex gap-3">
+
+                <button className="bg-blue-400 transition duration-300 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                  Save
+                </button>
+
+                <button
+                  onClick={() => setOpen(false)}
+                  className="bg-gray-300 text-black transition duration-300 hover:bg-red-500 hover:text-white px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+        )
+      }
+
+
+
+
+
+
+
 
           <div className="space-y-4">
             <div className="flex gap-5 ">

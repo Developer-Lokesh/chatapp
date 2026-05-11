@@ -29,3 +29,16 @@ export const updateName = async (id, fullName) => {
         throw new Error(error)
     }
 };
+
+export const updateProfile = async (id, img, profileImagePublicId) => {
+    try {
+        const [rows] = await db.query(`
+            UPDATE users
+            SET  profileImageUrl = ?, 
+             profileImagePublicId = ?
+            WHERE id = ?`, [img, profileImagePublicId, id]);
+            return rows;
+    } catch (error) {
+        throw new Error("Something went wrong")
+    }
+}

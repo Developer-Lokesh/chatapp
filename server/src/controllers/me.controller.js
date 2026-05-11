@@ -1,4 +1,4 @@
-import { meDB, updateNameDB } from "../services/me.service.js";
+import { meDB, updateNameDB, updateProfileDB } from "../services/me.service.js";
 
 export const me = async (req, res) => {
     try {
@@ -40,13 +40,40 @@ export const updateName = async (req, res) => {
         }
         return res.status(200).json({
             success:true,
-            message:"username update successfully"
+            message:"username update successfully",
+            data:data
         })
     } catch (error) {
         console.log(error)
         return res.status(500).json({
             success:false,
             message:error.message || "Internal server error"
+        })
+    }
+};
+
+export const updateProfile = async (req, res) => {
+    try {
+        const id = req.user.id;
+        const {profileImageUrl, profileImagePublicId} = req.body;
+        // console.log(id, profileImageUrl, profileImagePublicId)
+        const data = await updateProfileDB(id, profileImageUrl, profileImagePublicId);
+        if(!data){
+            return res.status(404).json({
+                success:false,
+                message:"Something went wrong while update profile"
+            })
+        }
+        return res.status(200).json({
+            success:true,
+            message:"Profile image updated successfully",
+            data:data
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:"Internal server errro"
         })
     }
 };

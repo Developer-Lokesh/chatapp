@@ -67,11 +67,11 @@ const Messages = () => {
                 : "bg-[#1f2937] text-gray-200 rounded-tl-none"
             }`}
           >
-            <p>{msg.message}</p>
+            <p className="break-all">{msg.message}</p>
 
             <div className="flex items-center justify-end gap-1 mt-1">
               <p className="text-[12px] text-gray-300">
-                {new Date(msg.create_at).toLocaleTimeString([], {
+                {new Date(msg.created_at).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
