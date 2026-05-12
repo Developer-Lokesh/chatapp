@@ -2,9 +2,11 @@ import React, { createContext, useEffect, useState } from 'react'
 
 export const AuthContext = createContext()
 const AuthProvider = ({children}) => {
-    const [userInfo, setUserInfo] = useState(null)
+    const [userInfo, setUserInfo] = useState(null);
+    const id = localStorage.getItem("id")
     useEffect(() => {
         const fetchData = async () => {
+            if(!id) return;
             try {
                 const url = import.meta.env.VITE_SERVER_URL;
                 const res = await fetch(`${url}/user/me/`, {
@@ -12,7 +14,7 @@ const AuthProvider = ({children}) => {
                     credentials:"include"
                 });
                 const data = await res.json();
-                console.log(data, "lokesh")
+                // console.log(data, "lokesh")
                 if(data.success){
                     setUserInfo(data.data)
                 }
@@ -21,7 +23,7 @@ const AuthProvider = ({children}) => {
             }
         };
         fetchData();
-    }, []);
+    }, [id]);
   return (
     <AuthContext.Provider value={{userInfo, setUserInfo}}>{children}</AuthContext.Provider>
   )

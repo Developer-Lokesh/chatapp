@@ -40,7 +40,7 @@ const Login = () => {
         });
         return;
       }
-      console.log(data.name, data.email);
+      // console.log(data.name, data.email);
 
       const id = data.data.id;
 
@@ -127,7 +127,7 @@ const Login = () => {
         </form>
 
         {/* Social Login (Optional) */}
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-gray-300"></span>
@@ -157,7 +157,7 @@ const Login = () => {
               <span className="text-sm font-medium">Facebook</span>
             </button>
           </div>
-        </div>
+        </div> */}
 
         <p className="mt-8 text-center text-sm text-gray-600">
           Don't have an account?{" "}

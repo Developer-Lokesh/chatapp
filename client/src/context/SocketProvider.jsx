@@ -1,6 +1,7 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRef } from "react";
 import { io } from "socket.io-client";
+import { AuthContext } from "./AuthProvider";
 
 export const SocketContext = createContext();
 
@@ -10,11 +11,12 @@ const SocketProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const id = localStorage.getItem("id");
   const url = import.meta.env.VITE_SERVER_URL;
+  const {userInfo} = useContext(AuthContext)
 
   const typingTimeouts = useRef({});
 
   useEffect(() => {
-    if (!url) return;
+    if (!url || !userInfo) return;
     const newSocket = io(`${url}`, {
       withCredentials: true,
     });
@@ -56,7 +58,7 @@ const SocketProvider = ({ children }) => {
       newSocket.off("getOnlineUsers", handleOnlineUsers);
       newSocket.disconnect();
     };
-  }, [url]);
+  }, [url, userInfo]);
   return (
     <SocketContext.Provider value={{ socket, typing, onlineUsers, }}>
       {children}

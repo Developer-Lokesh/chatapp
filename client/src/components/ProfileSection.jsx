@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Mail, Edit2, ArrowLeft, Edit3Icon } from "lucide-react";
 import { Link } from "react-router-dom";
-import {toast, ToastContainer} from 'react-toastify'
+import { toast, ToastContainer } from "react-toastify";
 import { AuthContext } from "../context/AuthProvider";
 import { useState } from "react";
 
@@ -9,9 +9,13 @@ const ProfileSection = ({ userData }) => {
   const { userInfo } = useContext(AuthContext);
   const [handle, setHandle] = useState(false);
   const [input, setInput] = useState(userInfo?.[0]?.fullName || "");
+  const [image, setImage] = useState(null);
   const [open, setOpen] = useState(false);
+  let imageUrl = null;
+  let imageUrlPublic_id = null;
   // console.log(handle);
   // console.log(handle);
+  console.log(image, "image");
 
   const handleForm = () => {
     setHandle(true);
@@ -23,31 +27,90 @@ const ProfileSection = ({ userData }) => {
   };
 
   const saveChanges = async (e) => {
-    console.log("clicked")
+    console.log("clicked");
     e.preventDefault();
     try {
-      if(!input.trim()) return;
+      if (!input.trim()) return;
       const url = import.meta.env.VITE_SERVER_URL;
       const res = await fetch(`${url}/user/me/`, {
-        method:"PATCH",
-        headers:{
-          "Content-Type": "application/json"
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
         },
-        credentials:"include",
-        body:JSON.stringify({fullName : input})
+        credentials: "include",
+        body: JSON.stringify({ fullName: input }),
       });
 
       const data = await res.json();
-      if(!data.success){
+      if (!data.success) {
         toast.error("Something went wrong");
         return;
       }
-      toast.success("Username updated successfully")
-      setHandle(false)
+      toast.success("Username updated successfully");
+      setHandle(false);
       // console.log(data)
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    }
+  };
+
+  const updateProfile = async (e) => {
+    e.preventDefault();
+    try {
+      // if(!input.trim()) return;
+      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+      const preset = import.meta.env.VITE_CLOUDINARY_PRESET_NAME;
+      if (!cloudName || !preset || !image) {
+        console.log("cloudinary config missing");
+        return;
+      }
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", preset);
+      formData.append("cloudName", cloudName);
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      const responseData = await response.json();
+      console.log(responseData);
+      console.log(responseData.secure_url);
+      console.log(responseData.public_id);
+      if (!response.ok) {
+        console.log("Something went wrong while uploading profile image");
+        return;
+      }
+      imageUrl = responseData.secure_url;
+      imageUrlPublic_id = responseData.public_id;
+
+      const url = import.meta.env.VITE_SERVER_URL;
+      const res = await fetch(`${url}/user/me/updateprofile`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          profileImageUrl: imageUrl,
+          profileImagePublicId: imageUrlPublic_id,
+        }),
+      });
+
+      const data = await res.json();
+      if (!data.success) {
+        toast.error("Something went wrong");
+        return;
+      }
+      toast.success("Profile image updated successfully");
+      setHandle(false);
+      setOpen(false);
+      // console.log(data)
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -90,58 +153,44 @@ const ProfileSection = ({ userData }) => {
               />
             </div>
 
-            <button 
-            onClick={() => setOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full flex items-center gap-2 transition-all font-medium mb-2 shadow-lg shadow-blue-500/20">
+            <button
+              onClick={() => setOpen(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full flex items-center gap-2 transition-all font-medium mb-2 shadow-lg shadow-blue-500/20"
+            >
               <Edit2 size={16} />
               Edit Profile
             </button>
           </div>
 
+          {open && (
+            <div className="fixed inset-0 text-white  bg-black/50 flex items-center justify-center">
+              <div className="bg-gray-950 p-6 border border-white rounded-xl w-[350px]">
+                <h1 className="text-xl font-bold mb-4">Update Profile</h1>
 
-{
-        open && (
-          <div 
-          className="fixed inset-0 text-white  bg-black/50 flex items-center justify-center">
+                <input
+                  type="file"
+                  onChange={(e) => setImage(e.target.files[0])}
+                  className="border p-2 w-full mb-4 rounded-md"
+                />
 
-            <div className="bg-gray-950 p-6 border border-white rounded-xl w-[350px]">
+                <div className="flex gap-3">
+                  <button
+                    onClick={updateProfile}
+                    className="bg-blue-400 transition duration-300 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                  >
+                    Save
+                  </button>
 
-              <h1 className="text-xl font-bold mb-4">
-                Update Profile
-              </h1>
-
-              <input
-                type="file"
-                className="border p-2 w-full mb-4 rounded-md"
-              />
-
-              <div className="flex gap-3">
-
-                <button className="bg-blue-400 transition duration-300 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                  Save
-                </button>
-
-                <button
-                  onClick={() => setOpen(false)}
-                  className="bg-gray-300 text-black transition duration-300 hover:bg-red-500 hover:text-white px-4 py-2 rounded"
-                >
-                  Cancel
-                </button>
-
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="bg-gray-300 text-black transition duration-300 hover:bg-red-500 hover:text-white px-4 py-2 rounded"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
-
             </div>
-
-          </div>
-        )
-      }
-
-
-
-
-
-
-
+          )}
 
           <div className="space-y-4">
             <div className="flex gap-5 ">
@@ -154,8 +203,9 @@ const ProfileSection = ({ userData }) => {
                     className="text-3xl outline-none px-2 border-white rounded-sm w-40 font-bold text-white tracking-tight"
                   />
                   <button
-                  onClick={saveChanges}
-                  className="bg-blue-600 px-3 py-2 rounded-sm cursor-pointer text-white hover:text-gray-200">
+                    onClick={saveChanges}
+                    className="bg-blue-600 px-3 py-2 rounded-sm cursor-pointer text-white hover:text-gray-200"
+                  >
                     Save changes
                   </button>
                 </div>

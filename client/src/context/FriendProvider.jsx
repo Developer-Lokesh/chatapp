@@ -1,12 +1,16 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { AuthContext } from './AuthProvider';
 
 export const FriendContext = createContext();
 const FriendProvider = ({children}) => {
+    const {userInfo} = useContext(AuthContext)
     const [friendInfo, setFrientInfo] = useState(null);
-    const [selectedFriend, setSelectedFriend] = useState(null)
+    const [selectedFriend, setSelectedFriend] = useState(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
+             if (!userInfo) return;
             try {
                 const url = import.meta.env.VITE_SERVER_URL;
                 const res = await fetch(`${url}/user/friends/`, {
@@ -23,7 +27,7 @@ const FriendProvider = ({children}) => {
             }
         }
         fetchData();
-    }, [])
+    }, [userInfo])
   return (
     <FriendContext.Provider value={{friendInfo, setFrientInfo, selectedFriend, setSelectedFriend}}>{children}</FriendContext.Provider>
   )

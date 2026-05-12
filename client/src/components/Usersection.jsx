@@ -7,7 +7,7 @@ const Usersection = () => {
   const { typing } = useContext(SocketContext);
 
   return (
-    <div>
+    <div >
       {friendInfo?.map((user, i) => {
         const isThisUserTyping = typing[String(user?.id)];
 

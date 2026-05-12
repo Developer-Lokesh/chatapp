@@ -10,6 +10,7 @@ import AuthProvider from "./context/AuthProvider";
 import FriendProvider from "./context/FriendProvider";
 import MessageProvider from "./context/MessageProvider";
 import SocketProvider from "./context/SocketProvider";
+import ProtectedRoute from "./components/ProtectedRoute";
 // import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
@@ -21,24 +22,50 @@ const App = () => {
             <FriendProvider>
               <MessageProvider>
                 <Routes>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
+                  
                   {/* <Route element={<ProtectedRoute />}> */}
-                    <Route
-                      path="/"
-                      element={
+                  {/* <ProtectedRoute> */}
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
                         <div className="flex h-screen">
                           <Leftside />
                           <Rightside />
                         </div>
-                        // <MainContainer/>
-                      }
-                    />
-                    {/* <Route path="/message" element={<Rightside />} /> */}
-                    <Route path="/chat-request" element={<ChatRequest />} />
-                    <Route path="/profile" element={<ProfileSection />} />
-                    <Route path="/add-friend" element={<AddFriend />} />
+                      </ProtectedRoute>
+                      // <MainContainer/>
+                    }
+                  />
+                  {/* <Route path="/message" element={<Rightside />} /> */}
+                  <Route
+                    path="/chat-request"
+                    element={
+                      <ProtectedRoute>
+                        <ChatRequest />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileSection />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/add-friend"
+                    element={
+                      <ProtectedRoute>
+                        <AddFriend />
+                      </ProtectedRoute>
+                    }
+                  />
+                  {/* </ProtectedRoute> */}
                   {/* </Route> */}
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
                 </Routes>
               </MessageProvider>
             </FriendProvider>

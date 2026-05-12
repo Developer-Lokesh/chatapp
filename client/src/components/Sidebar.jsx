@@ -9,11 +9,12 @@ import {
   BarChart3,
   MessageCircle,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Me from "./Me";
 import { AuthContext } from "../context/AuthProvider";
 
 const Sidebar = ({ openSidebar, setOpenSidebar }) => {
+  const navigate = useNavigate()
   const { userInfo } = useContext(AuthContext);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -43,7 +44,8 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
       const data = await res.json();
       console.log(data);
       if (data.success) {
-        localStorage.removeItem("user");
+        localStorage.removeItem("id");
+        navigate("/login");
       }
     } catch (error) {
       console.log(error);
@@ -108,7 +110,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
             className={`w-full flex items-center gap-4 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-all group`}
           >
             <LogOut size={22} />
-            {!isCollapsed && <span className="font-medium">Logout</span>}
+            {!isCollapsed && <span className="font-medium cursor-pointer">Logout</span>}
           </button>
 
           <div
@@ -123,10 +125,10 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
               <div className="overflow-hidden">
                 <div className="overflow-hidden">
                   <p className="text-sm font-bold text-gray-800 truncate">
-                    {userInfo?.[0]?.fullName}
+                    {userInfo ? userInfo?.[0]?.fullName : "User"}
                   </p>
                   <p className="text-xs text-gray-500 truncate">
-                    {userInfo?.[0]?.email}
+                    {userInfo ? userInfo?.[0]?.email : "user@gmail.com"}
                   </p>
                 </div>
               </div>
