@@ -1,65 +1,85 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const navigate = useNavigate();
-  // State variables for form fields and loading
-
+  
+  // State for form fields
   const [form, setForm] = useState({
-    fullName:"",
-    email:"",
-    password:"",
-    confirmPassword:""
-  })
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+  
+  // State for loading status
   const [isLoading, setIsLoading] = useState(false);
 
-  // handle all inputs
+  // Input change handler
   const inputHandler = (e) => {
-    const eleName = e.target.name;
-    const value = e.target.value;
-    setForm({...form, [eleName]:value})
-  }
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
 
-  // Function to handle form submission
+  // Form submission logic
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
-    // Basic Password Matching Validation
+    // 1. Validation: Password Match
     if (form.password !== form.confirmPassword) {
       alert("Passwords do not match!");
       setIsLoading(false);
-      return; 
+      return;
     }
 
-    const {confirmPassword, ...signupBody} = form
     try {
       const url = import.meta.env.VITE_SERVER_URL;
+
+      // 2. Signup API Call
+      const { confirmPassword, ...signupBody } = form;
       const res = await fetch(`${url}/auth/signup`, {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(signupBody)
       });
+
       const data = await res.json();
-      if(!data.success){
+
+      if (!data.success) {
         alert(data.message || "Something went wrong while creating account!");
-        
         setIsLoading(false);
         return;
-      } 
+      }
 
-      navigate("/")
-      
+      // 3. Auto-Login API Call (After successful signup)
+      const loginBody = { email: form.email, password: form.password };
+      const loginRes = await fetch(`${url}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginBody), // 'body' must be lowercase
+        credentials: "include"
+      });
+
+      const loginData = await loginRes.json();
+
+      if (loginData.success) {
+        // Save user ID to localStorage
+        const id = loginData.data?.id || loginData.userId;
+        localStorage.setItem("id", JSON.stringify(id));
+        navigate("/");
+      } else {
+        // If auto-login fails, send them to login page
+        alert("Account created! Please log in.");
+        navigate("/login");
+      }
 
     } catch (error) {
-      console.log(error)
-     
+      console.error("Auth Error:", error);
+      alert("Network error or server is down. Please try again later.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-
-   
   };
 
   return (
@@ -80,7 +100,7 @@ const Signup = () => {
             <label className="block text-sm font-medium text-gray-700">Full Name</label>
             <input
               type="text"
-              name = "fullName"
+              name="fullName"
               value={form.fullName}
               required
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
@@ -94,7 +114,7 @@ const Signup = () => {
             <label className="block text-sm font-medium text-gray-700">Email Address</label>
             <input
               type="email"
-              name = "email"
+              name="email"
               value={form.email}
               required
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
@@ -108,10 +128,10 @@ const Signup = () => {
             <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
-              name = "password"
+              name="password"
               value={form.password}
               required
-              minLength={6} // Basic length validation
+              minLength={6}
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               placeholder="••••••••"
               onChange={inputHandler}
@@ -123,19 +143,17 @@ const Signup = () => {
             <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
             <input
               type="password"
-              name = "confirmPassword"
+              name="confirmPassword"
               value={form.confirmPassword}
               required
               className={`mt-1 block w-full px-4 py-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all ${
-                // Visual feedback if passwords don't match (when confirmPassword has value)
                 form.confirmPassword && form.password !== form.confirmPassword ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder="••••••••"
               onChange={inputHandler}
             />
-            {/* Visual error message */}
             {form.confirmPassword && form.password !== form.confirmPassword && (
-                <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
+              <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
             )}
           </div>
 
@@ -153,27 +171,6 @@ const Signup = () => {
           </button>
         </form>
 
-        {/* Alternative Signups */}
-        <div className="mt-8">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-gray-300"></span></div>
-            <div className="relative flex justify-center text-sm"><span className="px-2 bg-white text-gray-500">Or sign up with</span></div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            {/* Google Signup */}
-            <button className="flex justify-center items-center py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src="https://www.svgrepo.com/show/355037/google.svg" className="h-5 w-5 mr-2" alt="Google" />
-              <span className="text-sm font-medium">Google</span>
-            </button>
-            {/* Facebook Signup */}
-            <button className="flex justify-center items-center py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src="https://www.svgrepo.com/show/331393/facebook.svg" className="h-5 w-5 mr-2" alt="FB" />
-              <span className="text-sm font-medium">Facebook</span>
-            </button>
-          </div>
-        </div>
-
         {/* Link to Login Page */}
         <p className="mt-8 text-center text-sm text-gray-600">
           Already have an account? <Link to="/login" className="font-bold text-purple-600 hover:text-purple-500">Sign in</Link>
@@ -183,4 +180,4 @@ const Signup = () => {
   );
 };
 
-export default Signup
+export default Signup;

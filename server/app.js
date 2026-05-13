@@ -76,51 +76,19 @@ io.on("connection", (socket) => {
   const userId = socket.user.id;
   if (userId) {
     onlineUsers.set(userId, socket.id);
-    console.log("user online")
+    console.log("user online");
 
     // Sabko batao user online hai
     io.emit("userOnline", userId);
 
-     io.emit("getOnlineUsers", Array.from(onlineUsers.keys()));
+    io.emit("getOnlineUsers", Array.from(onlineUsers.keys()));
   }
   if (!userId) {
     socket.disconnect();
     return;
   }
   socket.join(userId);
-  // console.log("user connected", userId);
 
-  // send message
-
-  // socket.on("send_message", async (data) => {
-  //   try {
-  //     console.log("hit")
-  //     const { receiverId, message } = data;
-  //     const senderId = socket.user.id;
-
-  //     const messageId = await saveMessage(senderId, receiverId, message);
-
-  //     const newMessage = {
-  //       id: messageId,
-  //       senderId,
-  //       receiverId,
-  //       message,
-  //       status: "sent",
-  //     };
-
-  //     io.to(receiverId).emit("receive_message", newMessage);
-
-  //     // if (onlineUsers.has(receiverId)) {
-  //     //   io.to(receiverId).emit("receive_message", newMessage);
-  //     // }
-
-  //     // console.log("Message", data);
-
-  //     socket.emit("message_sent", newMessage); //{ messageId: data.id }
-  //   } catch (error) {
-  //     console.log("send error", error);
-  //   }
-  // });
 
   socket.on("send_message", async (data) => {
     try {
@@ -132,7 +100,7 @@ io.on("connection", (socket) => {
         receiverId: data.receiverId,
         message: data.message,
         status: "sent",
-        created_at: data.create_at,
+        created_at: data.created_at,
       };
 
       // receiver ko realtime message bhejo
@@ -147,10 +115,6 @@ io.on("connection", (socket) => {
 
   // delivered message
 
-  // socket.on("message_delivered", ({ messageId, senderId }) => {
-  //   io.to(senderId).emit("message_delivered", { messageId });
-  // });
-
   socket.on("message_delivered", async ({ messageId, senderId }) => {
     try {
       await updateMessageStatus(messageId, "delivered");
@@ -161,18 +125,27 @@ io.on("connection", (socket) => {
     }
   });
 
-  // seen message
 
   socket.on("message_seen", async ({ messageId, senderId }) => {
     try {
       await updateMessageStatus(messageId, "seen");
-    io.to(senderId).emit("message_seen", { messageId });
 
-      // io.to(senderId).emit("message_delivered", { messageId });
+      console.log(senderId, "senderId");
+      console.log(Array.from(onlineUsers.entries()), "anttt shantt");
+
+      const senderSocketId = onlineUsers.get(Number(senderId));
+
+      console.log(senderSocketId, "socketId");
+
+      if (senderSocketId) {
+        io.to(senderSocketId).emit("message_seen", {
+          messageId,
+          status: "seen",
+        });
+      }
     } catch (err) {
       console.log(err);
     }
-    // io.to(senderId).emit("message_seen", { messageId });
   });
 
   // typing indicator
@@ -191,11 +164,10 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     if (userId) {
       onlineUsers.delete(userId);
-      console.log("user offline")
+      console.log("user offline");
 
       io.emit("userOffline", userId);
-     io.emit("getOnlineUsers", Array.from(onlineUsers.keys()));
-
+      io.emit("getOnlineUsers", Array.from(onlineUsers.keys()));
     }
     console.log("User disconnected", userId);
   });

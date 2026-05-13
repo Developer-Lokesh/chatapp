@@ -69,6 +69,7 @@ const Chatfooter = () => {
           senderId: currentId,
           receiverId,
           message: input,
+          status: "sent",
           created_at: new Date().toISOString(),
         };
 

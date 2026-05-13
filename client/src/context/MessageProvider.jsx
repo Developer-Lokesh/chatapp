@@ -6,23 +6,54 @@ export const MessageContext = createContext();
 
 const MessageProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
+
   const { selectedFriend } = useContext(FriendContext);
-  const { socket } = useContext(SocketContext);
+
+  const { socket, unreadCounts, setUnreadCounts } = useContext(SocketContext);
+  console.log(unreadCounts, "unread");
+
   const currentUserId = localStorage.getItem("id");
 
+  // Fetch messages
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedFriend?.id) return;
+
       try {
         const url = import.meta.env.VITE_SERVER_URL;
+
         const res = await fetch(`${url}/user/message/${selectedFriend?.id}`, {
           method: "GET",
           credentials: "include",
         });
+
         const data = await res.json();
-        console.log(data, 'this is data')
+
+        console.log(data, "this is data");
+
+        // if (data.success) {
+        //   setMessages(data.data);
+
+        // } else {
+        //   setMessages([]);
+        // }
+
         if (data.success) {
           setMessages(data.data);
+
+          // unread count calculate
+          const counts = {};
+
+          data.data.forEach((msg) => {
+            if (
+              Number(msg.receiverId) === Number(currentUserId) &&
+              msg.status === "sent"
+            ) {
+              counts[msg.senderId] = (counts[msg.senderId] || 0) + 1;
+            }
+          });
+
+          setUnreadCounts(counts);
         } else {
           setMessages([]);
         }
@@ -34,12 +65,14 @@ const MessageProvider = ({ children }) => {
     fetchData();
   }, [selectedFriend?.id]);
 
+  // Receive realtime messages
   useEffect(() => {
     if (!socket) return;
 
     const handleNewMessage = (newMessage) => {
       console.log("Message received via socket:", newMessage);
 
+      // apne khud ke message ignore
       if (String(newMessage.senderId) === String(currentUserId)) {
         return;
       }
@@ -48,8 +81,17 @@ const MessageProvider = ({ children }) => {
         String(newMessage.senderId) === String(selectedFriend?.id) ||
         String(newMessage.receiverId) === String(selectedFriend?.id);
 
+      // open chat me message show karo
       if (isRelevant) {
         setMessages((prev) => [...prev, newMessage]);
+      }
+
+      // unread count increase
+      if (String(newMessage.senderId) !== String(selectedFriend?.id)) {
+        setUnreadCounts((prev) => ({
+          ...prev,
+          [newMessage.senderId]: (prev[newMessage.senderId] || 0) + 1,
+        }));
       }
     };
 
@@ -60,8 +102,24 @@ const MessageProvider = ({ children }) => {
     };
   }, [socket, selectedFriend?.id]);
 
+  // Chat open hote hi unread reset
+  useEffect(() => {
+    if (!selectedFriend?.id) return;
+
+    setUnreadCounts((prev) => ({
+      ...prev,
+      [selectedFriend.id]: 0,
+    }));
+  }, [selectedFriend?.id]);
+
   return (
-    <MessageContext.Provider value={{ messages, setMessages }}>
+    <MessageContext.Provider
+      value={{
+        messages,
+        setMessages,
+        unreadCounts,
+      }}
+    >
       {children}
     </MessageContext.Provider>
   );

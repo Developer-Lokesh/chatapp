@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useContext, useState } from "react";
 import { FriendContext } from "../context/FriendProvider";
-import Chatfooter from "./Chatfooter";
 import { MessageContext } from "../context/MessageProvider";
 import { SocketContext } from "../context/SocketProvider";
 import { Check, CheckCheck } from "lucide-react";
@@ -8,14 +7,30 @@ import { Check, CheckCheck } from "lucide-react";
 const Messages = () => {
   const { selectedFriend } = useContext(FriendContext);
   const { socket, typing } = useContext(SocketContext);
-  const { messages } = useContext(MessageContext);
+  const { messages, setMessages } = useContext(MessageContext);
+  // const count = {};
+
+  // const unseenMessage = messages.filter((msg) => msg.status === 'sent');
+  // console.log(unseenMessage, "this is unseen message")
 
   const currentId = localStorage.getItem("id");
+  // const unreadMessages = messages.filter(
+  //   (msg) =>
+  //     Number(msg.receiverId) === Number(currentId) &&
+  //     Number(msg.senderId) === Number(selectedFriend?.id) &&
+  //     msg.status === "sent",
+  // );
 
+  // console.log(typeof currentId);
+  // console.log(messages);
+
+  // console.log(unreadMessages.length, unreadMessages, "this is unread message");
   const bottomRef = useRef(null);
 
-  const isTyping = typing[String(selectedFriend?.id)];
+  // Is ref ka use hum emit track karne ke liye karenge taaki infinite loop na bane
+  const processedMessages = useRef(new Set());
 
+  const isTyping = typing[String(selectedFriend?.id)];
   const [localTyping, setLocalTyping] = useState(false);
 
   useEffect(() => {
@@ -24,7 +39,7 @@ const Messages = () => {
     }
   }, [typing, selectedFriend]);
 
-  // Auto scroll
+  // Auto scroll logic
   useEffect(() => {
     if (messages.length > 0) {
       bottomRef.current?.scrollIntoView({
@@ -34,35 +49,66 @@ const Messages = () => {
     }
   }, [messages]);
 
-  // Seen emit
+  // Fixed Seen Emit Logic (No more infinite loops)
   useEffect(() => {
-    if (!selectedFriend?.id) return;
+    if (!selectedFriend?.id || !socket) return;
 
     messages.forEach((msg) => {
-      const isReceiverMessage = msg.senderId == selectedFriend.id;
+      const isReceiverMessage =
+        Number(msg.senderId) === Number(selectedFriend.id);
       const isUnseen = msg.status !== "seen";
 
-      if (isReceiverMessage && isUnseen) {
+      // Sirf tab emit karo agar message hamne abhi tak process nahi kiya hai
+      if (
+        isReceiverMessage &&
+        isUnseen &&
+        !processedMessages.current.has(msg.id)
+      ) {
         socket.emit("message_seen", {
           messageId: msg.id,
           senderId: msg.senderId,
         });
+
+        // Mark as processed taaki state update hone par dubara emit na ho
+        processedMessages.current.add(msg.id);
       }
     });
-  }, [messages, selectedFriend]);
+  }, [messages, selectedFriend, socket]);
+
+  //  Optimized Socket Listener
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleSeen = ({ messageId }) => {
+      console.log("SEEN EVENT RECEIVED", messageId);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          Number(msg.id) === Number(messageId) && msg.status !== "seen"
+            ? { ...msg, status: "seen" }
+            : msg,
+        ),
+      );
+    };
+
+    socket.on("message_seen", handleSeen);
+
+    return () => {
+      socket.off("message_seen", handleSeen);
+    };
+  }, [socket, setMessages]);
 
   return (
     <div className="space-y-3 relative p-4 bg-[#0a0a0c] text-white pb-20">
-      {messages.map((msg, index) => (
+      {messages.map((msg) => (
         <div
-          key={index}
+          key={msg.id}
           className={`flex ${
-            msg.senderId == currentId ? "justify-end" : ""
+            Number(msg.senderId) === Number(currentId) ? "justify-end" : ""
           }`}
         >
           <div
             className={`px-4 py-2 rounded-2xl max-w-xs ${
-              msg.senderId == currentId
+              Number(msg.senderId) === Number(currentId)
                 ? "bg-[#2563eb] text-white rounded-tr-none shadow-md"
                 : "bg-[#1f2937] text-gray-200 rounded-tl-none"
             }`}
@@ -77,13 +123,13 @@ const Messages = () => {
                 })}
               </p>
 
-              {/* only sender can see ticks */}
-              {msg.senderId == currentId && (
-                <span>
+              {/* Ticks logic */}
+              {Number(msg.senderId) === Number(currentId) && (
+                <span className="ml-1">
                   {msg.status === "seen" ? (
-                    <CheckCheck width={14} height={14} />
+                    <CheckCheck width={14} height={14} className="text-white" />
                   ) : (
-                    <Check width={14} height={14} />
+                    <Check width={14} height={14} className="text-gray-400" />
                   )}
                 </span>
               )}
@@ -92,9 +138,9 @@ const Messages = () => {
         </div>
       ))}
 
-      <p className={`${localTyping ? "animate-bounce" : ""} text-gray-400`}>
-        {localTyping ? "typing..." : ""}
-      </p>
+      {localTyping && (
+        <p className="animate-bounce text-gray-400 text-sm">typing...</p>
+      )}
 
       <div ref={bottomRef}></div>
     </div>

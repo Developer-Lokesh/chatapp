@@ -9,6 +9,7 @@ const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [typing, setTyping] = useState({});
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [unreadCounts, setUnreadCounts] = useState({});
   const id = localStorage.getItem("id");
   const url = import.meta.env.VITE_SERVER_URL;
   const {userInfo} = useContext(AuthContext)
@@ -60,7 +61,7 @@ const SocketProvider = ({ children }) => {
     };
   }, [url, userInfo]);
   return (
-    <SocketContext.Provider value={{ socket, typing, onlineUsers, }}>
+    <SocketContext.Provider value={{ socket, typing, onlineUsers, unreadCounts, setUnreadCounts}}>
       {children}
     </SocketContext.Provider>
   );
