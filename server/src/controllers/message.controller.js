@@ -1,4 +1,4 @@
-import { fetchMessageDB, saveMessageDB } from "../services/messages.service.js";
+import { fetchMessageDB, getUnreadMessageDB, saveMessageDB } from "../services/messages.service.js";
 
 export const sendMessage = async (req, res) => {
     try {
@@ -56,3 +56,27 @@ export const getMessages = async (req, res) => {
         })
     }
 }
+
+export const getUnreadMessage = async (req, res) => {
+    try {
+        const id = req.user.id;
+        const data = await getUnreadMessageDB(id);
+        if(!data){
+            return res.status(404).json({
+                success:false,
+                message:"No unread message found"
+            });
+        }
+        return res.status(200).json({
+            success:true,
+            message:"Unread message fetched successfully",
+            data:data
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        })
+    }
+};

@@ -102,6 +102,34 @@ const MessageProvider = ({ children }) => {
     };
   }, [socket, selectedFriend?.id]);
 
+  // find unread message 
+
+  useEffect(() => {
+    const fetchUnreadMessage = async () => {
+      try {
+        const url = import.meta.env.VITE_SERVER_URL;
+        const unseenRes = await fetch(`${url}/user/message/`, {
+          method:"GET",
+          credentials:"include"
+        });
+        const unseenData = await unseenRes.json();
+        console.log(unseenData, "unseenData")
+        if(unseenData.success){
+          const unseenCount = {};
+          unseenData.data.forEach((item) => {
+            unseenCount[item.senderId] = item.unreadCount
+          });
+
+          setUnreadCounts(unseenCount)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchUnreadMessage();
+  }, []);
+
   // Chat open hote hi unread reset
   useEffect(() => {
     if (!selectedFriend?.id) return;

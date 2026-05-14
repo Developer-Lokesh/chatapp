@@ -102,15 +102,15 @@ const Messages = () => {
       {messages.map((msg) => (
         <div
           key={msg.id}
-          className={`flex ${
+          className={`flex relative ${
             Number(msg.senderId) === Number(currentId) ? "justify-end" : ""
           }`}
         >
           <div
             className={`px-4 py-2 rounded-2xl max-w-xs ${
               Number(msg.senderId) === Number(currentId)
-                ? "bg-[#2563eb] text-white rounded-tr-none shadow-md"
-                : "bg-[#1f2937] text-gray-200 rounded-tl-none"
+                ? "bg-[#2563eb] text-white mb-3 rounded-tr-none shadow-md"
+                : "bg-[#1f2937] text-gray-200 rounded-tl-none mb-3"
             }`}
           >
             <p className="break-all">{msg.message}</p>
@@ -135,6 +135,15 @@ const Messages = () => {
               )}
             </div>
           </div>
+          <p className="text-[12px] text-gray-300 absolute bottom-[-10px] ">
+            {new Date(msg.created_at).toLocaleString([], {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              // hour: "2-digit",
+              // minute: "2-digit",
+            })}
+          </p>
         </div>
       ))}
 

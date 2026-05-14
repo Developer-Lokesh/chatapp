@@ -5,7 +5,7 @@ import ChatHeader from "./ChatHeader";
 
 const ChatScreen = () => {
   return (
-    <div className="h-screen flex flex-col bg-[#020617] text-white">
+    <div className="h-full flex flex-col bg-[#020617] text-white">
       <div className="hidden sm:block">
         <ChatHeader />
       </div>

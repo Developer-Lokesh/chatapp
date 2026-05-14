@@ -24,3 +24,14 @@ export const updateMessageStatus = async (messageId, status) => {
     [status, messageId]
   );
 };
+
+export const findUnreadMessage = async (id) => {
+  const [unreadMessage] = await db.query(`
+    SELECT senderId, COUNT(*) as unreadCount
+    FROM  messages
+    WHERE receiverId = ?
+    AND status = 'sent'
+    GROUP BY senderId`, [id]);
+
+    return unreadMessage;
+}

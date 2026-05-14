@@ -1,4 +1,4 @@
-import { fetchMessage, saveMessage } from "../models/messages.js"
+import { fetchMessage, findUnreadMessage, saveMessage } from "../models/messages.js"
 
 export const saveMessageDB = async (senderId, receiverId, message) => {
     // console.log(senderId, receiverId, message, "in service")
@@ -24,3 +24,16 @@ export const fetchMessageDB = async (user1, user2) => {
         throw new Error(error.message || "Internal server error")
     }
 }
+
+export const getUnreadMessageDB = async (id) => {
+    // console.log(id , "in service")
+    try {
+        if(!id){
+            throw new Error("Id not received");
+        }
+        const data = await findUnreadMessage(id);
+        return data;
+    } catch (error) {
+        throw new Error("Unread message not found", error)
+    }
+};
