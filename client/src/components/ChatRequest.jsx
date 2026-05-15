@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Check, X, UserPlus, Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { FriendContext } from "../context/FriendProvider";
 
 const ChatRequest = () => {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState(null); 
+  const {setFriendInfo} = useContext(FriendContext)
   // console.log(requests)
 
   useEffect(() => {
@@ -39,11 +41,12 @@ const ChatRequest = () => {
         body: JSON.stringify({ status: action }),
       });
       const data = await res.json();
-      console.log(data)
+      // console.log(data)
 
       if (data.success) {
         // UI se request smooth fade-out kar sakte ho ya turant filter
         setRequests((prev) => prev.filter((req) => req.id !== requestId));
+        setFriendInfo((prev) => [...prev, data.data]);
       }
     } catch (error) {
       console.error(`${action} Error:`, error);

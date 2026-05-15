@@ -7,19 +7,14 @@ import { SocketContext } from "../context/SocketProvider";
 
 const Chatfooter = () => {
   const { selectedFriend } = useContext(FriendContext);
-
   const { socket } = useContext(SocketContext);
-
   const { setMessages } = useContext(MessageContext);
-
   const receiverId = selectedFriend?.id;
-
   const [input, setInput] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const currentId = localStorage.getItem("id");
-
   const typingTimeOut = useRef(null);
-
+  
   const typingHandler = (e) => {
     setInput(e.target.value);
 
@@ -46,6 +41,7 @@ const Chatfooter = () => {
     if (!socket) return;
 
     try {
+      setLoading(true)
       const url = import.meta.env.VITE_SERVER_URL;
 
       // DB save
@@ -76,8 +72,6 @@ const Chatfooter = () => {
         // realtime emit
         socket.emit("send_message", newMessage);
 
-      
-
         // local UI update
         setMessages((prev) => [...prev, newMessage]);
 
@@ -85,6 +79,8 @@ const Chatfooter = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,7 +102,7 @@ const Chatfooter = () => {
 
       <button
         onClick={sendMessageBtn}
-        className="bg-[#2563eb] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-[#6294ff]"
+        className={`bg-[#2563eb] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-[#6294ff] ${loading ? '"opacity-50 cursor-not-allowed"' :""}`}
       >
         <LucideSendHorizontal />
       </button>

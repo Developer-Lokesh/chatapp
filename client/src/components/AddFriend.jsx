@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const AddFriend = () => {
   const [query, setQuery] = useState("");
@@ -23,18 +24,19 @@ const AddFriend = () => {
         credentials: "include",
       });
       const data = await res.json();
-      console.log(data.data ," this is user data");
+      // console.log(data.data ," this is user data");
       if (data.success) {
         setResult(data.data);
         // setQuery("")
       }
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong")
     }
   };
 
   const handleAddFriend = async (receiverId) => {
-    console.log(receiverId);
+    // console.log(receiverId);
     try {
       const url = import.meta.env.VITE_SERVER_URL;
       const res = await fetch(`${url}/user/chat-request/`, {
@@ -46,19 +48,34 @@ const AddFriend = () => {
         body: JSON.stringify({ receiverId: receiverId }),
       });
       const data = await res.json();
-      console.log(data);
-      if (data.success) {
-        alert("Request send successfully");
-
-        setSentRequests((prev) => [...prev, receiverId]);
+      // console.log(data);
+      if (!data.success) {
+        toast.error("Frient request not send")
       }
+      toast.success("Request send successfully");
+
+      setSentRequests((prev) => [...prev, receiverId]);
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong")
     }
   };
 
   return (
     <div className=" relative p-8 bg-[#0a0a0c] min-h-screen text-white font-sans">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        // transition={Bounce}
+      />
       <div className="flex py-3 items-center ">
         <Link
           to="/"

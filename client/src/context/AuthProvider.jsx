@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useState } from 'react'
 export const AuthContext = createContext()
 const AuthProvider = ({children}) => {
     const [userInfo, setUserInfo] = useState(null);
+    // console.log(userInfo)
     const id = localStorage.getItem("id")
     useEffect(() => {
         const fetchData = async () => {

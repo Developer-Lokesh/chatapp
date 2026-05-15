@@ -117,7 +117,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
             className={`mt-4 flex items-center gap-3 ${isCollapsed ? "justify-center" : "px-2"}`}
           >
             <img
-              src={userInfo?.[0]?.profileImageUrl}
+              src={userInfo?.profileImageUrl}
               alt="Profile"
               className="w-10 h-10 rounded-full border-2 border-purple-100"
             />
@@ -125,10 +125,10 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
               <div className="overflow-hidden">
                 <div className="overflow-hidden">
                   <p className="text-sm font-bold text-gray-800 truncate">
-                    {userInfo ? userInfo?.[0]?.fullName : "User"}
+                    {userInfo ? userInfo?.fullName : "User"}
                   </p>
                   <p className="text-xs text-gray-500 truncate">
-                    {userInfo ? userInfo?.[0]?.email : "user@gmail.com"}
+                    {userInfo ? userInfo?.email : "user@gmail.com"}
                   </p>
                 </div>
               </div>

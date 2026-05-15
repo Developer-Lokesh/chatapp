@@ -6,16 +6,18 @@ import { AuthContext } from "../context/AuthProvider";
 import { useState } from "react";
 
 const ProfileSection = ({ userData }) => {
-  const { userInfo } = useContext(AuthContext);
+  const { userInfo, setUserInfo } = useContext(AuthContext);
   const [handle, setHandle] = useState(false);
   const [input, setInput] = useState(userInfo?.[0]?.fullName || "");
   const [image, setImage] = useState(null);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("")
   let imageUrl = null;
   let imageUrlPublic_id = null;
   // console.log(handle);
   // console.log(handle);
-  console.log(image, "image");
+  // console.log(image, "image");
 
   const handleForm = () => {
     setHandle(true);
@@ -23,13 +25,19 @@ const ProfileSection = ({ userData }) => {
   };
 
   const inputHandler = (e) => {
+    setError("")
     setInput(e.target.value);
   };
 
   const saveChanges = async (e) => {
-    console.log("clicked");
+    // console.log("clicked");
     e.preventDefault();
     try {
+      if(userInfo?.[0]?.fullName.trim() == input.trim()){
+        setError("please choose different name");
+        return ;
+      }
+      setLoading(true)
       if (!input.trim()) return;
       const url = import.meta.env.VITE_SERVER_URL;
       const res = await fetch(`${url}/user/me/`, {
@@ -38,7 +46,7 @@ const ProfileSection = ({ userData }) => {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ fullName: input }),
+        body: JSON.stringify({ fullName: input.trim() }),
       });
 
       const data = await res.json();
@@ -46,22 +54,38 @@ const ProfileSection = ({ userData }) => {
         toast.error("Something went wrong");
         return;
       }
+
+      setUserInfo((prev) => [
+        {
+          ...prev[0],
+          fullName: input,
+        },
+      ]);
       toast.success("Username updated successfully");
       setHandle(false);
       // console.log(data)
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong")
+    } finally {
+      setLoading(false)
     }
   };
 
   const updateProfile = async (e) => {
     e.preventDefault();
     try {
+      if(!image){
+        setError("Please choose a image");
+        return;
+      }
       // if(!input.trim()) return;
+      setLoading(true);
       const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
       const preset = import.meta.env.VITE_CLOUDINARY_PRESET_NAME;
       if (!cloudName || !preset || !image) {
         console.log("cloudinary config missing");
+        toast.error("Resource missing in server")
         return;
       }
       const formData = new FormData();
@@ -105,12 +129,23 @@ const ProfileSection = ({ userData }) => {
         toast.error("Something went wrong");
         return;
       }
+
+      setUserInfo((prev) => [
+        {
+          ...prev[0],
+          profileImageUrl: imageUrl,
+          profileImagePublicId: imageUrlPublic_id,
+        },
+      ]);
       toast.success("Profile image updated successfully");
       setHandle(false);
       setOpen(false);
       // console.log(data)
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong")
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -169,16 +204,20 @@ const ProfileSection = ({ userData }) => {
 
                 <input
                   type="file"
-                  onChange={(e) => setImage(e.target.files[0])}
+                  onChange={(e) => {
+                    setError("");
+                    setImage(e.target.files[0])
+                  }}
                   className="border p-2 w-full mb-4 rounded-md"
                 />
+                <p className="text-red-500">{error}</p>
 
                 <div className="flex gap-3">
                   <button
                     onClick={updateProfile}
                     className="bg-blue-400 transition duration-300 hover:bg-blue-600 text-white px-4 py-2 rounded"
                   >
-                    Save
+                    {loading ? "Saving" : "save"}
                   </button>
 
                   <button
@@ -202,13 +241,15 @@ const ProfileSection = ({ userData }) => {
                     onChange={inputHandler}
                     className="text-3xl outline-none px-2 border-white rounded-sm w-40 font-bold text-white tracking-tight"
                   />
+                  
                   <button
                     onClick={saveChanges}
                     className="bg-blue-600 px-3 py-2 rounded-sm cursor-pointer text-white hover:text-gray-200"
                   >
-                    Save changes
+                    {loading ? "Saving..." : "Save changes"}
                   </button>
                 </div>
+                
               ) : (
                 <>
                   <h2 className="text-3xl font-bold text-white tracking-tight">
@@ -222,7 +263,10 @@ const ProfileSection = ({ userData }) => {
                   </button>
                 </>
               )}
+              
             </div>
+                  <p className="text-red-500">{error}</p>
+
 
             <div className="flex items-center gap-2 text-gray-400 py-4 border-t border-white/5">
               <Mail size={18} className="text-blue-400" />

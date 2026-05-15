@@ -8,7 +8,7 @@ const ProtectedRoute = ({children}) => {
 
   useEffect(() => {
     if (!id) {
-      console.log("please login first");
+      // console.log("please login first");
       navigate("/login")
       return;
     }

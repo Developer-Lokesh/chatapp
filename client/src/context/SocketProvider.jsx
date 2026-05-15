@@ -24,7 +24,7 @@ const SocketProvider = ({ children }) => {
     setSocket(newSocket);
 
     const handleTyping = ({ senderId }) => {
-      console.log("Typing start for:", senderId);
+      // console.log("Typing start for:", senderId);
       setTyping((prev) => ({ ...prev, [String(senderId)]: true }));
 
       // clear previous timeout for this user
@@ -39,12 +39,12 @@ const SocketProvider = ({ children }) => {
     };
 
     const handleStopTyping = ({ senderId }) => {
-      console.log("Typing stop for:", senderId);
+      // console.log("Typing stop for:", senderId);
       setTyping((prev) => ({ ...prev, [String(senderId)]: false }));
     };
 
     const handleOnlineUsers = (users) => {
-      console.log("online users", users);
+      // console.log("online users", users);
 
       setOnlineUsers(users);
     };

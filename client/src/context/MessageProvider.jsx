@@ -10,7 +10,7 @@ const MessageProvider = ({ children }) => {
   const { selectedFriend } = useContext(FriendContext);
 
   const { socket, unreadCounts, setUnreadCounts } = useContext(SocketContext);
-  console.log(unreadCounts, "unread");
+  // console.log(unreadCounts, "unread");
 
   const currentUserId = localStorage.getItem("id");
 
@@ -29,7 +29,7 @@ const MessageProvider = ({ children }) => {
 
         const data = await res.json();
 
-        console.log(data, "this is data");
+        // console.log(data, "this is data");
 
         // if (data.success) {
         //   setMessages(data.data);
@@ -70,7 +70,7 @@ const MessageProvider = ({ children }) => {
     if (!socket) return;
 
     const handleNewMessage = (newMessage) => {
-      console.log("Message received via socket:", newMessage);
+      // console.log("Message received via socket:", newMessage);
 
       // apne khud ke message ignore
       if (String(newMessage.senderId) === String(currentUserId)) {
@@ -113,7 +113,7 @@ const MessageProvider = ({ children }) => {
           credentials:"include"
         });
         const unseenData = await unseenRes.json();
-        console.log(unseenData, "unseenData")
+        // console.log(unseenData, "unseenData")
         if(unseenData.success){
           const unseenCount = {};
           unseenData.data.forEach((item) => {
@@ -136,7 +136,7 @@ const MessageProvider = ({ children }) => {
 
     setUnreadCounts((prev) => ({
       ...prev,
-      [selectedFriend.id]: 0,
+      [String(selectedFriend.id)]: 0,
     }));
   }, [selectedFriend?.id]);
 

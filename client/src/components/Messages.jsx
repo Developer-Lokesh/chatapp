@@ -5,29 +5,16 @@ import { SocketContext } from "../context/SocketProvider";
 import { Check, CheckCheck } from "lucide-react";
 
 const Messages = () => {
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { selectedFriend } = useContext(FriendContext);
   const { socket, typing } = useContext(SocketContext);
   const { messages, setMessages } = useContext(MessageContext);
-  // const count = {};
 
-  // const unseenMessage = messages.filter((msg) => msg.status === 'sent');
-  // console.log(unseenMessage, "this is unseen message")
 
   const currentId = localStorage.getItem("id");
-  // const unreadMessages = messages.filter(
-  //   (msg) =>
-  //     Number(msg.receiverId) === Number(currentId) &&
-  //     Number(msg.senderId) === Number(selectedFriend?.id) &&
-  //     msg.status === "sent",
-  // );
 
-  // console.log(typeof currentId);
-  // console.log(messages);
-
-  // console.log(unreadMessages.length, unreadMessages, "this is unread message");
   const bottomRef = useRef(null);
 
-  // Is ref ka use hum emit track karne ke liye karenge taaki infinite loop na bane
   const processedMessages = useRef(new Set());
 
   const isTyping = typing[String(selectedFriend?.id)];
@@ -48,6 +35,31 @@ const Messages = () => {
       });
     }
   }, [messages]);
+
+  const [prevMessageCount, setPrevMessageCount] = useState(0); // Ye add karo
+  // ... baaki code same
+
+  // Fixed Auto-scroll Logic
+  useEffect(() => {
+    if (!bottomRef.current) return;
+
+    // Initial load par direct bottom pe jao
+    if (isInitialLoad) {
+      bottomRef.current.scrollIntoView({ behavior: "auto", block: "end" });
+      setIsInitialLoad(false);
+      setPrevMessageCount(messages.length); // Current count save karo
+      return;
+    }
+
+    // Sirf new messages aane par scroll karo
+    if (messages.length > prevMessageCount) {
+      bottomRef.current.scrollIntoView({ 
+        behavior: "smooth", 
+        block: "end" 
+      });
+      setPrevMessageCount(messages.length); // Updated count save karo
+    }
+  }, [messages.length, isInitialLoad]);
 
   // Fixed Seen Emit Logic (No more infinite loops)
   useEffect(() => {
@@ -80,7 +92,7 @@ const Messages = () => {
     if (!socket) return;
 
     const handleSeen = ({ messageId }) => {
-      console.log("SEEN EVENT RECEIVED", messageId);
+      // console.log("SEEN EVENT RECEIVED", messageId);
       setMessages((prev) =>
         prev.map((msg) =>
           Number(msg.id) === Number(messageId) && msg.status !== "seen"

@@ -8,12 +8,13 @@ const ChatHeader = () => {
   const { selectedFriend } = useContext(FriendContext);
   const { typing, onlineUsers } = useContext(SocketContext);
   const isOnline = onlineUsers.includes(selectedFriend?.id);
-  console.log(isOnline);
-  console.log(onlineUsers, "online user");
+  // console.log(isOnline);
+  // console.log(onlineUsers, "online user");
   const isTyping = typing[String(selectedFriend?.id)];
 
   const [localTyping, setLocalTyping] = useState(false);
-  console.log(localTyping);
+  const [open, setOpen] = useState(false);
+  // console.log(localTyping);
 
   useEffect(() => {
     if (selectedFriend?.id) {
@@ -21,14 +22,14 @@ const ChatHeader = () => {
     }
   }, [typing, selectedFriend]);
 
-
   return (
     <div className="hidden sm:flex relative items-center h-15 bg-[#0a0a0c] px-10 gap-5 border-b-2 border-gray-700">
       <div className="flex gap-4">
         <img
           src={selectedFriend?.profileImageUrl}
           alt="User Image"
-          className="w-10 h-10 rounded-full"
+          onClick={() => setOpen(true)}
+          className="min-w-10 min-h-10 w-10 h-10 rounded-full object-cover cursor-pointer"
         />
         <span>
           <p>{selectedFriend?.fullName}</p>
@@ -43,6 +44,17 @@ const ChatHeader = () => {
       <button className="hidden sm:absolute right-2 top-0">
         <X />
       </button>
+
+      {open ? (
+        <div className="h-screen w-screen bg-black/50">
+          <div>
+            <img src={selectedFriend?.profileImageUrl} alt="User Image"
+            className="" />
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
