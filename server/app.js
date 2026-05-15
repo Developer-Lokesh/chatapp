@@ -27,6 +27,8 @@ const PORT = process.env.PORT || 5001;
 
 const app = express();
 
+app.set("trust proxy", 1)
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
