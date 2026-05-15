@@ -33,7 +33,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "none",
-      partitioned:true,
+      // partitioned:true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -41,7 +41,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "none",
-      partitioned:true,
+      // partitioned:true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
