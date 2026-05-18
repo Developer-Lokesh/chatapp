@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "pnpm install && pnpm --filter client install && pnpm --filter client build"
+    "build": "pnpm install --no-frozen-lockfile && pnpm --filter client install --no-frozen-lockfile && pnpm --filter client build"
   },
   "keywords": [],
   "author": "",
