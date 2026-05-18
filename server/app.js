@@ -34,12 +34,12 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: true ,
+    origin:"https://ghostchat-qzok.onrender.com" ,
     credentials: true,
   },
 });
 
-app.use(cors({ origin: true , credentials: true }));
+app.use(cors({ origin: "https://ghostchat-qzok.onrender.com" , credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
