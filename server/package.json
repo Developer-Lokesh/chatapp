@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "npm install && npm install --prefix client && npm run build --prefix client"
+    "build": "pnpm install && pnpm --filter client install && pnpm --filter client build"
   },
   "keywords": [],
   "author": "",
