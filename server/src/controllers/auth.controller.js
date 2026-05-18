@@ -32,7 +32,7 @@ export const login = async (req, res) => {
     res.cookie("accessToken", data.accessToken, {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
+      sameSite: "lax",
       // partitioned:true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -40,7 +40,7 @@ export const login = async (req, res) => {
     res.cookie("refreshToken", data.refreshToken, {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
+      sameSite: "lax",
       // partitioned:true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });

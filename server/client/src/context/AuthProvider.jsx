@@ -6,7 +6,9 @@ const AuthProvider = ({children}) => {
     // console.log(userInfo)
     const id = localStorage.getItem("id")
     useEffect(() => {
+        // console.log("authProvider")
         const fetchData = async () => {
+            // console.log("function running")
             if(!id) return;
             try {
                 const url = import.meta.env.VITE_SERVER_URL;

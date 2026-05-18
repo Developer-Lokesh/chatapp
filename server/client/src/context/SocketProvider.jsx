@@ -44,7 +44,7 @@ const SocketProvider = ({ children }) => {
     };
 
     const handleOnlineUsers = (users) => {
-      // console.log("online users", users);
+      console.log("online users", users);
 
       setOnlineUsers(users);
     };

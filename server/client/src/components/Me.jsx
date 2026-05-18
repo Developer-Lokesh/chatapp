@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthProvider";
 
 const Me = () => {
     const {userInfo} = useContext(AuthContext);
-    // console.log(userInfo, "this is user info");
+    console.log(userInfo, "this is user info");
   return (
     <div className="overflow-hidden">
       <p className="text-sm font-bold text-gray-800 truncate">{userInfo?.[0]?.fullName}</p>

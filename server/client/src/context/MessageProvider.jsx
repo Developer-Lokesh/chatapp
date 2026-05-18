@@ -16,6 +16,7 @@ const MessageProvider = ({ children }) => {
 
   // Fetch messages
   useEffect(() => {
+    // console.log("useEffect call")
     const fetchData = async () => {
       if (!selectedFriend?.id) return;
 
@@ -105,6 +106,7 @@ const MessageProvider = ({ children }) => {
   // find unread message 
 
   useEffect(() => {
+    // console.log('first')
     const fetchUnreadMessage = async () => {
       try {
         const url = import.meta.env.VITE_SERVER_URL;

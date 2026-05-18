@@ -12,8 +12,9 @@ const ChatHeader = () => {
   // console.log(onlineUsers, "online user");
   const isTyping = typing[String(selectedFriend?.id)];
 
+
   const [localTyping, setLocalTyping] = useState(false);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   // console.log(localTyping);
 
   useEffect(() => {
@@ -45,16 +46,16 @@ const ChatHeader = () => {
         <X />
       </button>
 
-      {open ? (
-        <div className="h-screen w-screen bg-black/50">
-          <div>
+      {/* {open ? (
+        <div className="h-screen w-screen relative flex justify-center items-center bg-black/50">
+          <div className="bg-amber-400 absolute">
             <img src={selectedFriend?.profileImageUrl} alt="User Image"
             className="" />
           </div>
         </div>
       ) : (
         ""
-      )}
+      )} */}
     </div>
   );
 };

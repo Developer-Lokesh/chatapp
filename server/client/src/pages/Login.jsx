@@ -24,6 +24,7 @@ const Login = () => {
 
     try {
       setIsLoading(true);
+      // console.log(import.meta.env.VITE_SERVER_URL, "db url")
       const url = import.meta.env.VITE_SERVER_URL;
       const res = await fetch(`${url}/auth/login`, {
         method: "POST",

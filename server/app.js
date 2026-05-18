@@ -18,6 +18,7 @@ import { verifyUser } from "./src/middleware/auth.middleware.js";
 import cookieParser from "cookie-parser";
 import { verifyToken } from "./src/utils/index.js";
 import { saveMessage, updateMessageStatus } from "./src/models/messages.js";
+import path from "path";
 
 dotenv.config();
 
@@ -33,24 +34,53 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://ghostchat-sigma.vercel.app",
+    origin: true ,
     credentials: true,
   },
 });
 
-app.use(cors({ origin: "https://ghostchat-sigma.vercel.app", credentials: true }));
+app.use(cors({ origin: true , credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
+// app.get("/", (req, res) => {
+//   res.send("hello world");
+// });
+
+// app.use("/auth", auth);
+
+// // Production code 
+
+// if(process.env.NODE_ENV === "production"){
+//   const dirPath = path.resolve();
+
+//   app.use(express.static("./client/dist"));
+//   app.get("/*splat", (req, res) => {
+//     res.sendFile(path.resolve(dirPath, "./client/dist", "index.html"));
+//   })
+
+// }
+
+// app.use(verifyUser);
+
+// app.use("/user", userPermisions);
 
 app.use("/auth", auth);
 
-app.use(verifyUser);
+// app.use(verifyUser);
 
-app.use("/user", userPermisions);
+app.use("/user", verifyUser, userPermisions);
+
+// frontend serve ALWAYS LAST
+if (process.env.NODE_ENV === "production") {
+  const dirPath = path.resolve();
+
+  app.use(express.static(path.join(dirPath, "client", "dist")));
+
+  app.get("/{*splat}", (req, res) => {
+    res.sendFile(path.join(dirPath, "client", "dist", "index.html"));
+  });
+}
 
 io.use((socket, next) => {
   try {
@@ -174,6 +204,18 @@ io.on("connection", (socket) => {
     console.log("User disconnected", userId);
   });
 });
+
+// Production code 
+
+// if(process.env.NODE_ENV === "production"){
+//   const dirPath = path.resolve();
+
+//   app.use(express.static("./client/dist"));
+//   app.get("/*splat", (req, res) => {
+//     res.sendFile(path.resolve(dirPath, "./client/dist", "index.html"));
+//   })
+
+// }
 
 const startServer = async () => {
   try {
