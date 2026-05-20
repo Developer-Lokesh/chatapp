@@ -46,7 +46,7 @@ const ChatRequest = () => {
       if (data.success) {
         // UI se request smooth fade-out kar sakte ho ya turant filter
         setRequests((prev) => prev.filter((req) => req.id !== requestId));
-        setFriendInfo((prev) => [...prev, data.data]);
+        setFriendInfo((prev) => [...prev, data?.data]);
       }
     } catch (error) {
       console.error(`${action} Error:`, error);
