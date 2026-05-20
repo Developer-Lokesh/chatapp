@@ -4,7 +4,7 @@ import { AuthContext } from "./AuthProvider";
 export const FriendContext = createContext();
 const FriendProvider = ({ children }) => {
   const { userInfo } = useContext(AuthContext);
-  const [friendInfo, setFriendInfo] = useState(null);
+  const [friendInfo, setFriendInfo] = useState([]);
   // const [selectedFriend, setSelectedFriend] = useState(null);
   const [selectedFriend, setSelectedFriend] = useState(() => {
     const savedFriend = localStorage.getItem("selectedFriend");
