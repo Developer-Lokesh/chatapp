@@ -15,9 +15,7 @@ const ProfileSection = ({ userData }) => {
   const [error, setError] = useState("")
   let imageUrl = null;
   let imageUrlPublic_id = null;
-  // console.log(handle);
-  // console.log(handle);
-  // console.log(image, "image");
+ 
 
   const handleForm = () => {
     setHandle(true);
@@ -30,7 +28,7 @@ const ProfileSection = ({ userData }) => {
   };
 
   const saveChanges = async (e) => {
-    // console.log("clicked");
+    
     e.preventDefault();
     try {
       if(userInfo?.[0]?.fullName.trim() == input.trim()){

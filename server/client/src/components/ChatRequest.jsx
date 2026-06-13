@@ -8,7 +8,7 @@ const ChatRequest = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState(null); 
   const {setFriendInfo} = useContext(FriendContext)
-  // console.log(requests)
+  console.log(requests, "reqest")
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -41,7 +41,7 @@ const ChatRequest = () => {
         body: JSON.stringify({ status: action }),
       });
       const data = await res.json();
-      // console.log(data)
+      console.log(data, "data")
 
       if (data.success) {
         // UI se request smooth fade-out kar sakte ho ya turant filter

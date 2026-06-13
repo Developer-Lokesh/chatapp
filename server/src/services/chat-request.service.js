@@ -40,10 +40,11 @@ export const updateChatRequestDB = async (requested, status) => {
         throw new Error("Invalid status");
     }
 
-    await updateRequest(requested, status);
-    
+   const data =  await updateRequest(requested, status);
+    console.log(data, "data")
     return {
         success:true,
-        message: `Request ${status}`
+        message: `Request ${status}`,
+        data:data
     }
 }

@@ -34,36 +34,16 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin:"https://ghostchat-qzok.onrender.com" ,
+    origin: " http://localhost:5173", //|| "https://ghostchat-qzok.onrender.com" ,
     credentials: true,
   },
 });
 
-app.use(cors({ origin: "https://ghostchat-qzok.onrender.com" , credentials: true }));
+app.use(cors({ origin: " http://localhost:5173", //|| "https://ghostchat-qzok.onrender.com" ,
+ credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// app.get("/", (req, res) => {
-//   res.send("hello world");
-// });
-
-// app.use("/auth", auth);
-
-// // Production code 
-
-// if(process.env.NODE_ENV === "production"){
-//   const dirPath = path.resolve();
-
-//   app.use(express.static("./client/dist"));
-//   app.get("/*splat", (req, res) => {
-//     res.sendFile(path.resolve(dirPath, "./client/dist", "index.html"));
-//   })
-
-// }
-
-// app.use(verifyUser);
-
-// app.use("/user", userPermisions);
 
 app.use("/auth", auth);
 
@@ -205,17 +185,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// Production code 
 
-// if(process.env.NODE_ENV === "production"){
-//   const dirPath = path.resolve();
-
-//   app.use(express.static("./client/dist"));
-//   app.get("/*splat", (req, res) => {
-//     res.sendFile(path.resolve(dirPath, "./client/dist", "index.html"));
-//   })
-
-// }
 
 const startServer = async () => {
   try {

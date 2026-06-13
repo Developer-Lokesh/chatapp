@@ -24,8 +24,8 @@ const Login = () => {
 
     try {
       setIsLoading(true);
-      // console.log(import.meta.env.VITE_SERVER_URL, "db url")
       const url = import.meta.env.VITE_SERVER_URL;
+      console.log(url, "url")
       const res = await fetch(`${url}/auth/login`, {
         method: "POST",
         headers: {
@@ -36,7 +36,6 @@ const Login = () => {
       });
 
       const data = await res.json();
-      // console.log(data);
       if (!data.success) {
         alert(data.message || "Something went wrong while logged in");
         setForm({
@@ -45,7 +44,6 @@ const Login = () => {
         });
         return;
       }
-      // console.log(data.name, data.email);
 
       const id = data.data.id;
 

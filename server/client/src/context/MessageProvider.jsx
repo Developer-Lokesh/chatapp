@@ -30,14 +30,7 @@ const MessageProvider = ({ children }) => {
 
         const data = await res.json();
 
-        // console.log(data, "this is data");
-
-        // if (data.success) {
-        //   setMessages(data.data);
-
-        // } else {
-        //   setMessages([]);
-        // }
+      
 
         if (data.success) {
           setMessages(data.data);
